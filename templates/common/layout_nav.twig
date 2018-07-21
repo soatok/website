@@ -1,0 +1,52 @@
+<nav>
+    <span class="nav-drop">Navigation</span>
+    <ul class="nav-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-soatok">About Soatok?</a></li>
+        {% if articles %}
+        <li>
+            <span class="nav-drop">Articles</span>
+            <ul class="nav-submenu">
+                {% for entry in articles %}{#
+                    #}{% if entry.published %}{#
+                        #}<li>
+                        <a
+                            title="{{ entry['publish-date']|e('html_attr') }}: {{ entry['long-title']|e('html_attr') }}"
+                            href="/articles/{{ entry['url']|e('url') }}"
+                        >{{ entry['short-title']|e('html') }}</a>
+                    </li>{#
+                    #}{% endif %}{#
+                #}{% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        <li>
+            <span class="nav-drop">Soatok Online</span>
+            <ul class="nav-submenu">
+                <li title="FurAffinity">
+                    <a href="https://www.furaffinity.net/user/soatok2" rel="noopener">{#
+                        #}<img class="social-media" src="/static/furaffinity.net.png" /> soatok2{#
+                    #}</a>
+                </li>
+                <li title="GitHub">
+                    <a href="https://github.com/soatok" rel="noopener">{#
+                        #}<i class="fa social-media fa-github"></i> soatok{#
+                    #}</a>
+                </li>
+                <li title="Telegram">
+                    <a href="https://t.me/IND_CCA3_Insecure" rel="noopener">{#
+                        #}<i class="fa social-media fa-telegram"></i> IND_CCA3_Insecure{#
+                    #}</a>
+                </li>
+                <li title="Twitter">
+                    <a href="https://twitter.com/SoatokDhole" rel="noopener">{#
+                        #}<i class="fa social-media fa-twitter"></i> SoatokDhole{#
+                    #}</a>
+                </li>
+            </ul>
+        </li>
+        <li><a href="https://github.com/soatok/website" rel="noopener">Website Source Code</a></li>
+        {#<li><a href="/blog">Soa Talks</a></li> #}
+        {# Eventually this space will be full of side projects, etc. #}
+    </ul>
+</nav>

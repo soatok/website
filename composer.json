@@ -1,0 +1,53 @@
+{
+  "name": "soatok/website",
+  "description": "The personal blog/website of Soatok Dreamseeker",
+  "license": "ISC",
+  "authors": [
+    {
+      "name": "Soatok Dreamseeker",
+      "role": "Developer",
+      "homepage": "https://twitter.com/SoatokDhole"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ezyang/htmlpurifier": "^4",
+    "league/commonmark": "^0.17|^1",
+    "nikic/fast-route": "^1.3",
+    "paragonie/anti-csrf": "^2",
+    "paragonie/certainty": "^2",
+    "paragonie/ciphersweet": "^1.2",
+    "paragonie/constant_time_encoding": "^2",
+    "paragonie/csp-builder": "^2",
+    "paragonie/easydb": "^2",
+    "paragonie/hidden-string": "^1",
+    "paragonie/ionizer": "^0|^1",
+    "paragonie/random_compat": "^9",
+    "paragonie/sodium_compat": "^1.6",
+    "paragonie/stern": "dev-master",
+    "psr/http-message": "^1",
+    "twig/twig": "^2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Soatok\\Website\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Soatok\\Tests\\": "test/"
+    }
+  },
+  "config": {
+    "process-timeout" : 0
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7",
+    "vimeo/psalm": "^2"
+  },
+  "scripts": {
+    "start": "php -S localhost:8069 public/index.php",
+    "test": "phpunit",
+    "type-check": "psalm"
+  }
+}

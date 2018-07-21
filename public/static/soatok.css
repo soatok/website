@@ -1,0 +1,89 @@
+body {
+    background-position: top center;
+    background-attachment: fixed;
+}
+@media (max-width: 1199px) {
+    body {
+        background-image: url("/static/soatok-background-optimized.jpg")
+    }
+}
+@media (min-width: 1200px) {
+    body {
+        background-image: url("/static/soatok-background.jpg")
+    }
+}
+#main-wrapper {
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+#content-wrapper {
+    background-color: rgba(0, 0, 0, 0.6);
+    min-height: calc(100vh - 80px);
+    padding-top: 1rem;
+}
+#content {
+    box-shadow: rgba(0, 0, 255, 0.25) 0 0 0.25rem;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin-left: 0;
+}
+#top-row {
+    background-image: linear-gradient(
+        top,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -moz-linear-gradient(
+        top,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    color: #ffffff;
+}
+#left-nav {
+    background-image: linear-gradient(
+            left,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -moz-linear-gradient(
+            left,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.55) 100%
+    );
+    padding-top: 1rem;
+}
+#left-nav > nav > ul {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding-left: 0;
+    margin-left: 0;
+}
+.nav-menu, .nav-submenu {
+    list-style: none;
+    padding-left: 0;
+}
+.nav-drop {
+    font-weight: bold;
+}
+
+.nav-menu li {
+    background-color: rgba(0, 0, 0, 0.25);
+    transition: background-color 0.2s;
+}
+.nav-menu li:hover {
+    background-color: rgba(40, 40, 40, 0.33);
+}
+.nav-menu li > ul > li {
+    padding-left: 1rem;
+}
+.social-media {
+    color: #fff;
+    height: 1rem;
+    vertical-align: text-bottom;
+}
+nav a, nav a:visited {
+    color: #327de1;
+}
+nav a:hover {
+    color: #28b0ff;
+}

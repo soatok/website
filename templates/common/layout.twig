@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>{% block head %}
+    <title>{% block title %}Soatok Dreamseeker - Dhole (Cuon Alpinus) Furry{% endblock %}</title>
+    <link rel="stylesheet" href="/static/soatok.css" type="text/css" />
+    {% block theme_head %}{% include "theme_head.twig" %}{% endblock %}
+{% endblock %}</head>
+<body>
+{% block body %}
+    <div id="main-wrapper" class="container-fluid h-100">
+    {% block main_wrapper %}
+        <div class="row" id="top-row">
+            <div class="w100">{% include "layout_header.twig" %}</div>
+        </div>
+        <div class="row h-100" id="main-row">
+            <div class="col-3" id="left-nav">
+                {% block layout_nav %}{% include "layout_nav.twig" %}{% endblock %}
+            </div>
+            <div class="col-9 h-100 container-fluid" id="content-wrapper">
+                <div id="content" class="container">{% block content %}
+                    {# Empty... Fill me in in inherited templates #}
+                {% endblock %}</div>
+            </div>
+        </div>
+    {% endblock %}
+    </div>
+{% endblock %}
+{% block theme_foot %}{% include "theme_foot.twig" %}{% endblock %}
+</body>
+</html>

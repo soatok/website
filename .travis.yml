@@ -1,0 +1,35 @@
+language: php
+sudo: required
+dist: trusty
+php:
+    - "7.2"
+    - "master"
+    - "nightly"
+
+matrix:
+    fast_finish: true
+    allow_failures:
+        - php: "master"
+        - php: "nightly"
+
+os:
+    - linux
+before_install:
+    - git clone -b stable https://github.com/jedisct1/libsodium.git
+    - cd libsodium && sudo ./configure && sudo make check && sudo make install && cd ..
+install:
+    - pecl channel-update pecl.php.net
+    - pecl install libsodium
+    - travis_retry composer install --no-interaction
+
+script:
+    - ./vendor/bin/phpunit
+    - ./vendor/bin/psalm
+
+before_script:
+    - php bin/generate-keys.php
+
+cache:
+    directories:
+        - vendor
+        - $HOME/.cache/composer

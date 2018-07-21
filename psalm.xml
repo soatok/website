@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<psalm
+    autoloader="./autoload-psalm.php"
+    totallyTyped="false"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
+        <RedundantCondition errorLevel="info" />
+        <DocblockTypeContradiction errorLevel="info" />
+        <RedundantConditionGivenDocblockType errorLevel="info" />
+        <UnresolvableInclude errorLevel="info" />
+    </issueHandlers>
+</psalm>
