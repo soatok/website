@@ -13,10 +13,10 @@
             <div class="w100">{% include "layout_header.twig" %}</div>
         </div>
         <div class="row h-100" id="main-row">
-            <div class="col-3" id="left-nav">
+            <div class="col-md-3" id="left-nav">
                 {% block layout_nav %}{% include "layout_nav.twig" %}{% endblock %}
             </div>
-            <div class="col-9 h-100 container-fluid" id="content-wrapper">
+            <div class="col-md-9 h-100 container-fluid" id="content-wrapper">
                 <div id="content" class="container">{% block content %}
                     {# Empty... Fill me in in inherited templates #}
                 {% endblock %}</div>
