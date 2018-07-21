@@ -51,19 +51,26 @@ abstract class Utility
 
     /**
      * @param string $path
+     * @param bool $skipCache
      *
      * @return string
      * @throws BaseException
      * @throws FileNotFoundException
      * @throws FileReadException
      */
-    public static function getMarkdownFile(string $path): string
-    {
+    public static function getMarkdownFile(
+        string $path,
+        bool $skipCache = false
+    ): string {
         if (!\is_readable($path)) {
             throw new FileNotFoundException(
                 'Markdown file not found: ' . $path
             );
         }
+        if (\is_readable($path . '.cache') && !$skipCache) {
+            return (string) \file_get_contents($path . '.cache');
+        }
+
         /** @var string|bool $raw */
         $input = \file_get_contents($path);
         if (!\is_string($input)) {
@@ -73,9 +80,11 @@ abstract class Utility
         }
 
         $config = GlobalConfig::instance();
-        return $config->getMarkdownRenderer()->convertToHtml(
-            $config->getHtmlPurifier()->purify($input)
+        $html = $config->getHtmlPurifier()->purify(
+            $config->getMarkdownRenderer()->convertToHtml($input)
         );
+        \file_put_contents($path . '.cache', $html);
+        return $html;
     }
 
     /**

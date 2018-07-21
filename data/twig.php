@@ -25,11 +25,18 @@ $return = [
         }
     ],
     'functions' => [
-        'get_md' => function(string $file): string {
-            return Utility::getMarkdownFile(
-                SOATOK_ROOT . '/data/markdown/' . $file
-            );
-        }
+        'get_md' =>
+        /**
+         * @param string $file
+         * @param bool $skipCache
+         * @return string
+         */
+            function(string $file, bool $skipCache = false): string {
+                return Utility::getMarkdownFile(
+                    SOATOK_ROOT . '/data/markdown/' . $file,
+                    $skipCache
+                );
+            }
     ],
     'globals' => [
         'articles' => Soatok::getArticles()
