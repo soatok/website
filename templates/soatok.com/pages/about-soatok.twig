@@ -4,5 +4,48 @@
 {% block content %}
     <h2>About Soatok</h2>
 
+    <p>
+        Soatok is a <a href="https://en.wikipedia.org/wiki/Furry_fandom">furry</a>.
+        His fursona is a blue <a href="http://animals.sandiegozoo.org/animals/dhole">dhole</a>.
+    </p>
+
+    <h3 id="ref-sheet">Soatok's Reference Sheet</h3>
+    <picture>
+        <img src="/static/soatok-ref-sheet.jpg" class="img-fluid" alt="Soatok's Ref Sheet" />
+        <figcaption>
+            Reference sheet created by <a href="https://www.deviantart.com/heyankey">HeyAnkey</a>.
+        </figcaption>
+    </picture>
+
+    <hr />
+    <h3 id="description">Soatok's Character Description</h3>
+    {% set description = [
+        ["Species", "Dhole"],
+        ["Height", "6'3\""],
+        ["Fur Color", "Deep blue coat with light blue underfur"],
+        ["Age", ('now'|date('Y') - '1989-10-12'|date('Y') - 1) + ('now'|date('2010-m-d')|date('U') - '1989-10-12'|date('2010-m-d')|date('U') >= 0 ? 1 : 0)],
+        ["Eye Color", "Sunset"]
+    ] %}
+
+    <div class="table table-body-striped">
+    <table class="w-100">
+        <thead>
+            <tr><th>Detail</th><th>Description of Detail</th></tr>
+        </thead>
+        <tbody>
+        {% for row in description %}
+            <tr>
+                <th>{{ row[0] }}</th>
+                <td>{{ row[1] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <h3 id="fursuit">Soatok's Fursuit</h3>
+    <p>
+        <em>Coming soon&hellip;</em>
+    </p>
 
 {% endblock %}

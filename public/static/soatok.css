@@ -26,6 +26,7 @@ body {
     border-radius: 0.25rem;
     background-color: rgba(0, 0, 0, 0.7);
     margin-left: 0;
+    padding: 1rem;
 }
 #top-row {
     background-image: linear-gradient(
@@ -116,4 +117,11 @@ nav a, nav a:visited {
 }
 nav a:hover {
     color: #28b0ff;
+}
+
+.table-body-striped > table {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.table-body-striped tbody > tr:nth-child(2n + 1) {
+    background-color: rgba(0, 0, 128, 0.15);
 }
