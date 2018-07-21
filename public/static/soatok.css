@@ -33,7 +33,22 @@ body {
         rgba(0, 0, 0, 0.3) 0%,
         rgba(0, 0, 0, 0.55) 100%
     );
+    background-image: -o-linear-gradient(
+        top,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -ms-linear-gradient(
+        top,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
     background-image: -moz-linear-gradient(
+        top,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -webkit-linear-gradient(
         top,
         rgba(0, 0, 0, 0.3) 0%,
         rgba(0, 0, 0, 0.55) 100%
@@ -42,14 +57,29 @@ body {
 }
 #left-nav {
     background-image: linear-gradient(
-            left,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.55) 100%
+        left,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -o-linear-gradient(
+        left,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -ms-linear-gradient(
+        left,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
     );
     background-image: -moz-linear-gradient(
-            left,
-            rgba(0, 0, 0, 0.3) 0%,
-            rgba(0, 0, 0, 0.55) 100%
+        left,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+    );
+    background-image: -webkit-linear-gradient(
+        left,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.55) 100%
     );
     padding-top: 1rem;
 }
