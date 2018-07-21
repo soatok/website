@@ -6,3 +6,7 @@
 /data/local/db.sqlite
 /data/local/keys.php
 /vendor
+/data/markdown/*/*/*/*.cache
+/data/markdown/*/*/*.cache
+/data/markdown/*/*.cache
+/data/markdown/*.cache
