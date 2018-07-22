@@ -19,7 +19,7 @@ body {
 }
 #content-wrapper {
     background-color: rgba(0, 0, 0, 0.6);
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 112px);
     padding-top: 1rem;
 }
 #content {
@@ -68,6 +68,7 @@ body {
         rgba(0, 0, 0, 0.55) 100%
     );
     color: #ffffff;
+    padding: 1rem;
 }
 #left-nav {
     background-image: linear-gradient(
