@@ -145,3 +145,14 @@ nav a:hover {
 .article-image.float-left {
     margin-right: 1rem;
 }
+#article-list {
+    list-style: none;
+    padding: 0;
+}
+#article-list ul {
+    list-style: none;
+    padding: 0;
+}
+#article-list .entry-title {
+    font-size: 15pt;
+}

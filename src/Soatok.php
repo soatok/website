@@ -18,6 +18,15 @@ class Soatok
      */
     public static function getArticles(): array
     {
-        return Utility::getJsonFile(SOATOK_ROOT . '/data/articles.json');
+        $articles = Utility::getJsonFile(SOATOK_ROOT . '/data/articles.json');
+        uasort(
+            $articles,
+            function (array $a, array $b): int {
+                return (new \DateTime($b['publish-date']))
+                        <=>
+                   (new \DateTime($a['publish-date']));
+            }
+        );
+        return $articles;
     }
 }

@@ -5,10 +5,12 @@
         <li><a href="/about-soatok">About Soatok?</a></li>
         {% if articles %}
         <li>
-            <span class="nav-drop">Articles</span>
+            <a href="/articles">Articles</a>
             <ul class="nav-submenu">
+                {% set i = 0 %}
                 {% for entry in articles %}{#
-                    #}{% if entry.published %}{#
+                    #}{% if entry.published and i < 5 %}{#
+                        #}{% set i = i + 1 %}{#
                         #}<li>
                         <a
                             title="{{ entry['publish-date']|e('html_attr') }}: {{ entry['long-title']|e('html_attr') }}"

@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+
+{% block title %}Articles by Soatok Dreamseeker{% endblock %}
+{% block content %}
+    <h2>Articles by Soatok Dreamseeker</h2>
+    <ul id="article-list">
+    {% for entry in articles %}
+        {% if entry['published'] %}
+        <li>
+            <ul class="entry">
+                <li class="entry-title">
+                    <a href="/articles/{{ entry['url']|e('url') }}">{#
+                        #}{{ entry['long-title']|e('html') }}{#
+                    #}</a>
+                </li>
+                <li class="entry-subtitle">
+                    {{ entry['publish-date']|date('F j, Y') }}
+                </li>
+            </ul>
+        </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}
