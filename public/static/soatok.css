@@ -1,13 +1,14 @@
 body {
     background-position: top center;
     background-attachment: fixed;
+    background-size: 100vw 100vh;
 }
-@media (max-width: 1199px) {
+@media (max-width: 1999px) {
     body {
         background-image: url("/static/soatok-background-optimized.jpg")
     }
 }
-@media (min-width: 1200px) {
+@media (min-width: 2000px) {
     body {
         background-image: url("/static/soatok-background.jpg")
     }
