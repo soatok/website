@@ -34,9 +34,9 @@ participating into question is a waste of everyone's time.
 
 But there is a question in this vein that I do believe *is* worth
 answering. A question that is rarely ever asked by curious non-furries.
-The same question that is posed in the title of this article?
+The same question that is posed in the title of this article:
 
-### What Does Being a Furry Mean to You?
+#### What *Does* Being a Furry Mean to You?
 
 <img src="/static/soatok_lick.png" alt="Soatok Puzzled" class="w-25 float-left article-image" />
 
