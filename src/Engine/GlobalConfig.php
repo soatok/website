@@ -4,8 +4,14 @@ namespace Soatok\Website\Engine;
 
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
+use Soatok\Website\Engine\Cryptography\Key\{
+    AsymmetricPublicKey,
+    AsymmetricSecretKey,
+    SymmetricKey
+};
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
+    CryptoException,
     FileNotFoundException,
     FileReadException,
     JSONException
@@ -129,6 +135,48 @@ final class GlobalConfig
         return $this->purifier;
     }
 
+
+    /**
+     * @param bool $forceLoad
+     *
+     * @return array<string, CryptographicKeyInterface>
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    private function getKeyring(bool $forceLoad = false): array
+    {
+        if (!empty($this->keyring) && !$forceLoad) {
+            return $this->keyring;
+        }
+        if (!\is_readable($this->configDir . '/keys.php')) {
+            throw new FileNotFoundException(
+                'Cannot open ' . $this->configDir . '/keys.php'
+            );
+        }
+
+        $keyring = include $this->configDir . '/keys.php';
+        if (!isset($keyring['secret-key'], $keyring['public-key'], $keyring['shared-key'])) {
+            throw new CryptoException('Mandatory keys are not defined in keyring');
+        }
+        foreach ($keyring as $key) {
+            if (!($key instanceof CryptographicKeyInterface)) {
+                throw new \TypeError();
+            }
+        }
+
+        if (!($keyring['secret-key'] instanceof AsymmetricSecretKey)) {
+            throw new \TypeError();
+        }
+        if (!($keyring['public-key'] instanceof AsymmetricPublicKey)) {
+            throw new \TypeError();
+        }
+        if (!($keyring['shared-key'] instanceof SymmetricKey)) {
+            throw new \TypeError();
+        }
+        $this->keyring = $keyring;
+        return $this->keyring;
+    }
+
     /**
      * @return CommonMarkConverter
      */
@@ -168,6 +216,54 @@ final class GlobalConfig
             $this->router = new Router($dispatcher);
         }
         return $this->router;
+    }
+
+    /**
+     * @return AsymmetricPublicKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getPublicKey(): AsymmetricPublicKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var AsymmetricPublicKey $publicKey */
+        $publicKey = $keyring['public-key'];
+        if (!($keyring['public-key'] instanceof AsymmetricPublicKey)) {
+            throw new \TypeError();
+        }
+        return $publicKey;
+    }
+
+    /**
+     * @return AsymmetricSecretKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getSecretKey(): AsymmetricSecretKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var AsymmetricSecretKey $secretKey */
+        $secretKey = $keyring['secret-key'];
+        if (!($keyring['secret-key'] instanceof AsymmetricSecretKey)) {
+            throw new \TypeError();
+        }
+        return $secretKey;
+    }
+
+    /**
+     * @return SymmetricKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getSymmetricKey(): SymmetricKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var SymmetricKey $sharedKey */
+        $sharedKey = $keyring['shared-key'];
+        if (!($keyring['shared-key'] instanceof SymmetricKey)) {
+            throw new \TypeError();
+        }
+        return $sharedKey;
     }
 
     /**
