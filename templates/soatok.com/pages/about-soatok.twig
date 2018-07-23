@@ -7,24 +7,47 @@
     <p>
         Soatok is a <a href="https://en.wikipedia.org/wiki/Furry_fandom">furry</a>.
         His fursona is a blue <a href="http://animals.sandiegozoo.org/animals/dhole">dhole</a>.
+        Soatok is <strong>gay</strong> and <strong>male</strong>.
     </p>
+
+    <h4>Soatok's Interests</h4>
+    <ul>
+        <li>Furry art</li>
+        <li>Computer programming</li>
+        <li>Network and Application Security</li>
+        <li>Cryptography</li>
+        <li>Amateur game development</li>
+        <li>Puns and other wordplay-based humor</li>
+        <li>Technical writing</li>
+        <li>Creative writing</li>
+        <li>Online publishing</li>
+        <li>The science of happiness</li>
+        <li>Fursuiting</li>
+    </ul>
 
     <h3 id="ref-sheet">Soatok's Reference Sheet</h3>
     <picture>
         <img src="/static/soatok-ref-sheet.jpg" class="img-fluid" alt="Soatok's Ref Sheet" />
-        <figcaption>
+        <figcaption class="text-center">
             Reference sheet created by <a href="https://www.deviantart.com/heyankey">HeyAnkey</a>.
         </figcaption>
     </picture>
 
     <hr />
     <h3 id="description">Soatok's Character Description</h3>
+    {#
+        One day, someone in the fandom is going to read this and wonder why the
+        hell I went through the trouble of doing all this instead of writing
+        HTML.
+
+        Answer: I'm lazy and I hate repeating myself.
+    #}
     {% set description = [
         ["Species", "Dhole"],
         ["Height", "6'3\""],
         ["Fur Color", "Deep blue coat with light blue underfur"],
         ["Age", ('now'|date('Y') - '1989-10-12'|date('Y') - 1) + ('now'|date('2010-m-d')|date('U') - '1989-10-12'|date('2010-m-d')|date('U') >= 0 ? 1 : 0)],
-        ["Eye Color", "Sunset"]
+        ["Eye Color", "Sunset (orangeish inside, fading purple to the exterior)"]
     ] %}
 
     <div class="table table-body-striped">
