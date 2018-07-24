@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace Soatok\Website\Struct;
 
+use ParagonIE\Stern\SternTrait;
 use Soatok\Website\Engine\Cryptography\Password;
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
-    RaceConditionException
+    RaceConditionException,
+    SecurityException
 };
 use Soatok\Website\Engine\{
     GlobalConfig,
@@ -21,6 +23,8 @@ use ParagonIE_Sodium_Core_Util as Util;
  */
 class User extends Struct implements Unique
 {
+    use SternTrait;
+
     const TABLE_NAME = 'website_users';
     const PRIMARY_KEY = 'userid';
     const DB_FIELD_NAMES = [
@@ -46,6 +50,37 @@ class User extends Struct implements Unique
 
     /** @var string $pwHash */
     protected $pwHash = '';
+
+    /**
+     * @return User
+     * @throws BaseException
+     * @throws SecurityException
+     */
+    public static function active(): self
+    {
+        if (isset($_SESSION['userid'])) {
+            throw new SecurityException('Not logged in');
+        }
+        $user = User::strictById((int) $_SESSION['userid']);
+        if (!($user instanceof User)) {
+            throw new \TypeError();
+        }
+        return $user;
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return bool
+     * @throws BaseException
+     */
+    public static function usernameIsTaken(string $username): bool
+    {
+        return GlobalConfig::instance()->getDatabase()->exists(
+            "SELECT count(*) FROM " . self::TABLE_NAME . " WHERE username = ?",
+            $username
+        );
+    }
 
     /**
      * @param HiddenString $password
@@ -104,5 +139,31 @@ class User extends Struct implements Unique
             Util::store64_le($this->id)
         );
         return $this;
+    }
+
+    /**
+     * @param string $property
+     * @param bool|int|string|float|null $value
+     * @return self
+     */
+    public function set(string $property, $value): self
+    {
+        $this->__set($property, $value);
+        return $this;
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return self
+     * @throws BaseException
+     */
+    public static function byId(int $userId): self
+    {
+        $user = parent::strictById($userId);
+        if (!($user instanceof User)) {
+            throw new \TypeError();
+        }
+        return $user;
     }
 }

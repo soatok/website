@@ -1,0 +1,46 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h2>Signup for the Dreamseeker Den</h2>
+    {% if error %}
+        <p class="alert-error">{{ error|e('html') }}</p>
+    {% endif %}
+    <form method="post">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input class="form-control" type="text" name="username" value="{{ post.username|e('html_attr') }}" placeholder="username" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                class="form-control"
+                id="email"
+                aria-describedby="emailHelp"
+                placeholder="user@email.com"
+            >
+            <small id="emailHelp" class="form-text text-muted">
+                This is only used for password recovery.
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="passphrase">Passphrase:</label>
+            <input
+                class="form-control"
+                type="text"
+                name="passphrase"
+                autocomplete="false"
+                placeholder="At least 12 characters"
+                aria-describedby="passphraseHelp"
+                required="required"
+                pattern="^.{12,}$"
+            />
+            <small id="passphraseHelp" class="form-text text-muted">
+                Must be at least 12 characters long. Password managers are highly recommended.
+            </small>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-dark">Register</button>
+        </div>
+    </form>
+{% endblock %}

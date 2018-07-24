@@ -22,6 +22,18 @@
         </li>
         {% endif %}
         <li>
+            <span class="nav-drop"><a href="/den">Dreamseeker's Den</a></span>
+            <ul class="nav-submenu">
+            {% if session.userid %}
+                {% include "layout_den_nav.twig" %}
+                <li><a href="/logout/{{ session['logout-nonce']|e('url') }}">Logout</a></li>
+            {% else %}
+                <li><a href="/den/login">Login</a></li>
+                <li><a href="/den/signup">Sign Up</a></li>
+            {% endif %}
+            </ul>
+        </li>
+        <li>
             <span class="nav-drop">Soatok Online</span>
             <ul class="nav-submenu">
                 <li title="FurAffinity">

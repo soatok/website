@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Soatok\Website\Engine;
 
+use ParagonIE\Stern\SternTrait;
+use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\Policies\Unique;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\EasyDB\EasyDB;
@@ -13,10 +15,11 @@ use \ParagonIE_Sodium_Compat as NaCl;
  */
 abstract class Struct
 {
+    use SternTrait;
+
     const TABLE_NAME = '';
     const PRIMARY_KEY = '';
     const DB_FIELD_NAMES = [];
-    const BOOLEAN_FIELDS = [];
 
     /** @var EasyDB $db */
     protected $db;
@@ -77,8 +80,17 @@ abstract class Struct
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * @return bool
-     * @throws \Exception
+     * @throws BaseException
+     * @throws \SodiumException
      */
     public function create(): bool
     {
@@ -103,11 +115,15 @@ abstract class Struct
             }
             $fields[$field] = $this->{$property};
         }
-        $this->id = (int) $this->db->insertGet(
-            (string) (static::TABLE_NAME),
-            $fields,
-            (string) (static::PRIMARY_KEY)
-        );
+        try {
+            $this->id = (int)$this->db->insertGet(
+                (string)(static::TABLE_NAME),
+                $fields,
+                (string)(static::PRIMARY_KEY)
+            );
+        } catch (\Exception $ex) {
+            throw new BaseException($ex->getMessage(), $ex->getCode(), $ex);
+        }
         if ($this instanceof Unique) {
             self::$objectCache[$this->getCacheKey()] = $this;
         }
@@ -116,7 +132,8 @@ abstract class Struct
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws BaseException
+     * @throws \SodiumException
      */
     public function update(): bool
     {
@@ -204,5 +221,36 @@ abstract class Struct
 
         /** @psalm-suppress MixedAssignment */
         $this->{$name} = $value;
+    }
+
+    /**
+     * Struct::byId() maps here. See SternTrait for more information.
+     *
+     * @param int $id
+     * @return self
+     * @throws BaseException
+     */
+    public static function strictById(int $id): self
+    {
+        $db = GlobalConfig::instance()->getDatabase();
+        $stored = $db->row(
+            "SELECT * FROM " .
+                self::TABLE_NAME .
+            " WHERE " .
+                self::PRIMARY_KEY . " = ?",
+            $id
+        );
+
+        $struct = new static($db);
+        /** @var array<string, string> $fields */
+        $fields = static::DB_FIELD_NAMES;
+        foreach ($fields as $dbname => $prop) {
+            if ($prop === 'id') {
+                continue;
+            }
+            $struct->{$prop} = $stored[$dbname];
+        }
+        $struct->id = $id;
+        return $struct;
     }
 }

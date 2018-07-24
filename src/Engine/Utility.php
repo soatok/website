@@ -3,6 +3,9 @@ declare(strict_types=1);
 namespace Soatok\Website\Engine;
 
 use GuzzleHttp\Psr7\Response;
+use ParagonIE\Ionizer\InputFilterContainer;
+use ParagonIE\Ionizer\InvalidDataException;
+use Psr\Http\Message\RequestInterface;
 use Soatok\Website\Engine\Exceptions\{
     BaseException, FileNotFoundException, FileReadException, JSONException
 };
@@ -124,6 +127,25 @@ abstract class Utility
             default:
                 return $type;
         }
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param null|InputFilterContainer $container
+     *
+     * @return array
+     * @throws InvalidDataException
+     */
+    public static function getParams(
+        RequestInterface $request,
+        ?InputFilterContainer $container = null
+    ): array {
+        $params = [];
+        \parse_str((string) $request->getBody(), $params);
+        if ($container) {
+            $params = $container($params);
+        }
+        return $params;
     }
 
     /**

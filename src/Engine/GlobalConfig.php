@@ -251,6 +251,19 @@ final class GlobalConfig
     }
 
     /**
+     * @return array<string, int|bool|string>
+     */
+    public function getSessionConfig(): array
+    {
+        if (!isset($this->settings['session'])) {
+            return [
+                'cookie_httponly' => true
+            ];
+        }
+        return $this->settings['session'];
+    }
+
+    /**
      * @return SymmetricKey
      * @throws CryptoException
      * @throws FileNotFoundException
