@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
 use GuzzleHttp\Psr7\Response;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
 use ParagonIE\Ionizer\InvalidDataException;
@@ -66,7 +67,11 @@ class Login implements RequestHandlerInterface
 
         $user = User::byUsername($username);
         if ($user->checkPassword($passphrase)) {
+            \session_regenerate_id(true);
             $_SESSION['userid'] = $user->getId();
+            $_SESSION['logout-nonce'] = Base64UrlSafe::encode(
+                \random_bytes(33)
+            );
         } else {
             throw new NoSuchUserException('Invalid username and/or passphrase');
         }

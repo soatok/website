@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
 use ParagonIE\Ionizer\InvalidDataException;
@@ -70,7 +71,11 @@ class Register implements RequestHandlerInterface
         }
         $user->setPassword(new HiddenString($post['passphrase']));
         $user->update();
+        \session_regenerate_id(true);
         $_SESSION['userid'] = $user->getId();
+        $_SESSION['logout-nonce'] = Base64UrlSafe::encode(
+            \random_bytes(33)
+        );
         return $user;
     }
 
