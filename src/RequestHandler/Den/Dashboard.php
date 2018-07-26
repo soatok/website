@@ -2,17 +2,19 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
-use Soatok\Website\Engine\Contract\RequestHandlerInterface;
-use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\FilterRules\VoidFilter;
 use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-use Soatok\Website\Middleware\AutoLoginMiddleware;
-use Soatok\Website\Middleware\DenMiddleware;
+use Soatok\Website\Engine\Contract\RequestHandlerInterface;
+use Soatok\Website\Engine\Exceptions\BaseException;
+use Soatok\Website\Engine\GlobalConfig;
+use Soatok\Website\FilterRules\VoidFilter;
+use Soatok\Website\Middleware\{
+    AutoLoginMiddleware,
+    DenMiddleware
+};
 
 /**
  * Class Dashboard
