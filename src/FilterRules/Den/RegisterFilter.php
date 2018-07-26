@@ -17,6 +17,7 @@ class RegisterFilter extends InputFilterContainer
         $this
             ->addFilter('username', new StringFilter())
             ->addFilter('email', new EmailAddressFilter())
-            ->addFilter('passphrase', new StringFilter());
+            ->addFilter('passphrase', new StringFilter())
+            ->addFilter('authcode', new StringFilter());
     }
 }

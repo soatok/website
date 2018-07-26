@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     RequestInterface,
@@ -62,6 +63,9 @@ class Dashboard implements RequestHandlerInterface
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {
+        if (!isset($_SESSION['logout-nonce'])) {
+            $_SESSION['logout-nonce'] = Base64UrlSafe::encode(\random_bytes(33));
+        }
         return GlobalConfig::instance()
             ->getTemplates()
             ->render('den/index.twig');

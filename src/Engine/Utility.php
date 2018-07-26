@@ -206,7 +206,7 @@ abstract class Utility
         $config = GlobalConfig::instance()->getSessionConfig();
         return \setcookie(
             $name,
-            $value,
+            (string) $value,
             $expires ?? 0,
             $config['cookie_path'] ?? '/',
             $config['cookie_domain'] ?? '',

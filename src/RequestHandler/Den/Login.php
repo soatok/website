@@ -72,6 +72,11 @@ class Login implements RequestHandlerInterface
         if (!$user->checkPassword($passphrase)) {
             throw new NoSuchUserException('Invalid username and/or passphrase');
         }
+        if (!$user->checkSecondFactor($params['authcode'])) {
+            /** @todo log this a huge red flag about password theft */
+            throw new NoSuchUserException('Invalid 2FA code provided.');
+        }
+
         \session_regenerate_id(true);
         $_SESSION['userid'] = $user->getId();
         $_SESSION['logout-nonce'] = Base64UrlSafe::encode(\random_bytes(33));
@@ -96,6 +101,9 @@ class Login implements RequestHandlerInterface
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {
+        if (isset($_SESSION['userid'])) {
+            return Utility::redirect('/den');
+        }
         $post = Utility::getParams($request);
         $twigVars = [];
         if ($post) {

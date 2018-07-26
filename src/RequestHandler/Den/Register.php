@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
+use DivineOmega\PasswordExposed\PasswordStatus;
+use Kelunik\TwoFactor\Oath;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
@@ -14,6 +16,7 @@ use Soatok\Website\Engine\Exceptions\SecurityException;
 use Soatok\Website\Engine\GlobalConfig;
 use Soatok\Website\Engine\Utility;
 use Soatok\Website\FilterRules\Den\RegisterFilter;
+use Soatok\Website\Middleware\AutoLoginMiddleware;
 use Soatok\Website\Struct\User;
 
 /**
@@ -65,6 +68,27 @@ class Register implements RequestHandlerInterface
                 'User "' . $post['username'] . '" is already registered.'
             );
         }
+        if (\password_exposed($post['passphrase']) === PasswordStatus::EXPOSED) {
+            throw new SecurityException(
+                'The password you attempted to register with has already been ' .
+                'compromised in a previous data breach. Please visit ' .
+                '<a href="https://haveibeenpwned.com">Have I Been Pwned?</a> ' .
+                'for more information.'
+            );
+        }
+
+        $oath = new Oath();
+        if (!isset($_SESSION['twoFactorTemp'])) {
+            throw new SecurityException(
+                'Two-factor secret not stored in local session.'
+            );
+        }
+        if (!$oath->verifyTotp($_SESSION['twoFactorTemp'], $post['authcode'])) {
+            throw new SecurityException(
+                'Invalid two-factor authentication code.'
+            );
+        }
+
         $user = new User($db);
         $user->set('username', $post['username'])
              ->set('email', $post['email']);
@@ -72,6 +96,7 @@ class Register implements RequestHandlerInterface
             throw new SecurityException('Could not create new user account.');
         }
         $user->setPassword(new HiddenString($post['passphrase']));
+        $user->setTwoFactorSecret(new HiddenString($_SESSION['twoFactorTemp']));
         $user->update();
         \session_regenerate_id(true);
         $_SESSION['userid'] = $user->getId();
@@ -94,8 +119,12 @@ class Register implements RequestHandlerInterface
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {
+        if (isset($_SESSION['userid'])) {
+            return Utility::redirect('/den');
+        }
         $post = Utility::getParams($request);
         $twigVars = [];
+
         if ($post) {
             try {
                 $this->createAccount($post);
@@ -110,6 +139,15 @@ class Register implements RequestHandlerInterface
                 }
             }
         }
+        $oath = new Oath();
+        if (!isset($_SESSION['twoFactorTemp'])) {
+            $_SESSION['twoFactorTemp'] = $oath->generateKey();
+        }
+        $twigVars['twofactoruri'] = $oath->getUri(
+            $_SESSION['twoFactorTemp'],
+            'soatok.com',
+            '$username'
+        );
 
         return GlobalConfig::instance()
             ->getTemplates()

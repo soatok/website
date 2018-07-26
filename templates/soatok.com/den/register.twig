@@ -50,8 +50,47 @@
                 Must be at least 12 characters long. Password managers are highly recommended.
             </small>
         </div>
+
+        <div class="form-group" id="2fa-container">
+            <p>
+                Please scan this QR code with your TOTP-enabled multi-factor
+                authentication device. If you do not have one, check out
+                <a
+                    href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US"
+                    rel="noopener"
+                >Google Authenticator</a>.
+            </p>
+            <input
+                type="hidden"
+                data-base="{{ twofactoruri }}"
+                value="{{ twofactoruri|e('html_attr') }}"
+                id="2fa-uri"
+            />
+            <div class="text-center">
+                <canvas id="qr-code"></canvas>
+            </div>
+
+            <label for="authcode">Authenticator Code:</label>
+            <input
+                class="form-control"
+                id="authcode"
+                maxlength="6"
+                name="authcode"
+                pattern="^[0-9]{6}$"
+                placeholder="000000"
+                required="required"
+                size="6"
+                type="text"
+            />
+        </div>
+
         <div class="form-group">
             <button type="submit" class="btn btn-dark">Register</button>
         </div>
     </form>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha256-25ncr0CpJhgbzkUiR3wu/Fkk9sSykRG2qX+upHfJUos=" crossorigin="anonymous"></script>
+<script src="/static/den/register.js"></script>
 {% endblock %}

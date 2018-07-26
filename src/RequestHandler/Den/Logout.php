@@ -3,18 +3,13 @@ declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
-use ParagonIE\Ionizer\InvalidDataException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\Exceptions\SecurityException;
-use Soatok\Website\Engine\GlobalConfig;
 use Soatok\Website\Engine\Utility;
 use Soatok\Website\FilterRules\VoidFilter;
-use Soatok\Website\Struct\User;
 
 /**
  * Class Logout
@@ -61,6 +56,9 @@ class Logout implements RequestHandlerInterface
     {
         if (!isset($_SESSION['userid'])) {
             return Utility::redirect('/den/login');
+        }
+        if (!isset($_SESSION['logout-nonce'])) {
+            $_SESSION['logout-nonce'] = Base64UrlSafe::encode(\random_bytes(33));
         }
         if (\hash_equals($_SESSION['logout-nonce'], $this->nonce)) {
             unset($_SESSION['userid']);

@@ -17,6 +17,7 @@ class LoginFilter extends InputFilterContainer
         $this
             ->addFilter('username', new StringFilter())
             ->addFilter('passphrase', new StringFilter())
-            ->addFilter('remember', new BoolFilter());
+            ->addFilter('remember', new BoolFilter())
+            ->addFilter('authcode', new StringFilter());
     }
 }

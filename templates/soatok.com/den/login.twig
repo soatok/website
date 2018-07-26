@@ -25,6 +25,20 @@
                 id="passphrase"
                 name="passphrase"
                 required="required"
+                type="password"
+            />
+        </div>
+        <div class="form-group">
+            <label for="authcode">Authenticator Code:</label>
+            <input
+                class="form-control"
+                id="authcode"
+                maxlength="6"
+                name="authcode"
+                pattern="^[0-9]{6}$"
+                placeholder="000000"
+                required="required"
+                size="6"
                 type="text"
             />
         </div>

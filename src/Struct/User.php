@@ -2,11 +2,15 @@
 declare(strict_types=1);
 namespace Soatok\Website\Struct;
 
+use Kelunik\TwoFactor\Oath;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Stern\SternTrait;
 use Soatok\Website\Engine\Cryptography\Password;
 use Soatok\Website\Engine\Exceptions\{
-    BaseException, NoSuchUserException, RaceConditionException, SecurityException
+    BaseException,
+    NoSuchUserException,
+    RaceConditionException,
+    SecurityException
 };
 use Soatok\Website\Engine\{
     Cryptography\Symmetric, GlobalConfig, Policies\Unique, Struct
@@ -30,7 +34,8 @@ class User extends Struct implements Unique
         'username' => 'username',
         'pwhash' => 'pwHash',
         'email' => 'email',
-        'displayname' => 'displayName'
+        'displayname' => 'displayName',
+        'twofactor' => 'twoFactorSecret'
     ];
 
     /** @var bool $active */
@@ -47,6 +52,9 @@ class User extends Struct implements Unique
 
     /** @var string $pwHash */
     protected $pwHash = '';
+
+    /** @var string $twoFactorSecret */
+    protected $twoFactorSecret = '';
 
     /**
      * @return User
@@ -132,6 +140,28 @@ class User extends Struct implements Unique
     }
 
     /**
+     * @param string $authCode
+     *
+     * @return bool
+     * @throws BaseException
+     * @throws \SodiumException
+     */
+    public function checkSecondFactor(string $authCode): bool
+    {
+        if (!\is_string($this->twoFactorSecret)) {
+            return false;
+        }
+        return (new Oath())->verifyTotp(
+            Symmetric::decryptWithAd(
+                $this->twoFactorSecret,
+                (GlobalConfig::instance())->getSymmetricKey(),
+                Util::store64_le($this->id)
+            )->getString(),
+            $authCode
+        );
+    }
+
+    /**
      * @return Password
      * @throws BaseException
      */
@@ -163,6 +193,32 @@ class User extends Struct implements Unique
             $password,
             Util::store64_le($this->id)
         );
+        return $this;
+    }
+
+    /**
+     * @param HiddenString $secret
+     *
+     * @return User
+     * @throws BaseException
+     * @throws RaceConditionException
+     * @throws \SodiumException
+     */
+    public function setTwoFactorSecret(HiddenString $secret): self
+    {
+        if (!$this->id) {
+            throw new RaceConditionException(
+                'You cannot set the two-factor secret until the user record has ' .
+                'been saved to the database, in order to prevent race conditions ' .
+                'against the sequential primary key.'
+            );
+        }
+        $this->twoFactorSecret = Symmetric::encryptWithAd(
+            $secret,
+            (GlobalConfig::instance())->getSymmetricKey(),
+            Util::store64_le($this->id)
+        );
+
         return $this;
     }
 
