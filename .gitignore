@@ -3,8 +3,6 @@
 /data/db.sqlite
 /data/keys.php
 /data/local
-/data/local/db.sqlite
-/data/local/keys.php
 /vendor
 /data/markdown/*/*/*/*.cache
 /data/markdown/*/*/*.cache

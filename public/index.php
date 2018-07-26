@@ -24,6 +24,7 @@ try {
     echo $ex->getMessage(), PHP_EOL;
     exit(1);
 }
+\session_start($config->getSessionConfig());
 
 try {
     $config->getRouter()

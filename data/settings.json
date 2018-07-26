@@ -1,4 +1,8 @@
 {
   "version": "0.0.1",
+  "session": {
+    "cookie_httponly": true,
+    "cookie_secure": true
+  },
   "debug": true
 }

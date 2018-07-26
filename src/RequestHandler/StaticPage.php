@@ -5,8 +5,6 @@ namespace Soatok\Website\RequestHandler;
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\Engine\Router;
-use Soatok\Website\Engine\Utility;
 use Soatok\Website\FilterRules\VoidFilter;
 use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
@@ -38,6 +36,7 @@ class StaticPage implements RequestHandlerInterface
     {
         return [];
     }
+
     /**
      * @param array $vars
      * @return RequestHandlerInterface

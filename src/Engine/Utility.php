@@ -3,6 +3,9 @@ declare(strict_types=1);
 namespace Soatok\Website\Engine;
 
 use GuzzleHttp\Psr7\Response;
+use ParagonIE\Ionizer\InputFilterContainer;
+use ParagonIE\Ionizer\InvalidDataException;
+use Psr\Http\Message\RequestInterface;
 use Soatok\Website\Engine\Exceptions\{
     BaseException, FileNotFoundException, FileReadException, JSONException
 };
@@ -127,6 +130,25 @@ abstract class Utility
     }
 
     /**
+     * @param RequestInterface $request
+     * @param null|InputFilterContainer $container
+     *
+     * @return array
+     * @throws InvalidDataException
+     */
+    public static function getParams(
+        RequestInterface $request,
+        ?InputFilterContainer $container = null
+    ): array {
+        $params = [];
+        \parse_str((string) $request->getBody(), $params);
+        if ($container) {
+            $params = $container($params);
+        }
+        return $params;
+    }
+
+    /**
      * @param string $path
      *
      * @return string
@@ -162,6 +184,34 @@ abstract class Utility
             ['Location' => $path],
             '',
             GlobalConfig::instance()->getHttpVersion()
+        );
+    }
+
+    /**
+     * @param string $name
+     * @param string|int|bool|null $value
+     * @param int|null $expires
+     * @return bool
+     *
+     * @throws BaseException
+     */
+    public static function setCookie(
+        string $name,
+        $value = null,
+        ?int $expires = null
+    ): bool {
+        if (\headers_sent()) {
+            return false;
+        }
+        $config = GlobalConfig::instance()->getSessionConfig();
+        return \setcookie(
+            $name,
+            (string) $value,
+            $expires ?? 0,
+            $config['cookie_path'] ?? '/',
+            $config['cookie_domain'] ?? '',
+            $config['cookie_secure'] ?? false,
+            $config['cookie_httponly'] ?? true
         );
     }
 }

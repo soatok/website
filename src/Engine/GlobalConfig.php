@@ -4,8 +4,15 @@ namespace Soatok\Website\Engine;
 
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
+use Soatok\Website\Engine\Contract\CryptographicKeyInterface;
+use Soatok\Website\Engine\Cryptography\Key\{
+    AsymmetricPublicKey,
+    AsymmetricSecretKey,
+    SymmetricKey
+};
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
+    CryptoException,
     FileNotFoundException,
     FileReadException,
     JSONException
@@ -129,6 +136,48 @@ final class GlobalConfig
         return $this->purifier;
     }
 
+
+    /**
+     * @param bool $forceLoad
+     *
+     * @return array<string, CryptographicKeyInterface>
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    private function getKeyring(bool $forceLoad = false): array
+    {
+        if (!empty($this->keyring) && !$forceLoad) {
+            return $this->keyring;
+        }
+        if (!\is_readable($this->configDir . '/keys.php')) {
+            throw new FileNotFoundException(
+                'Cannot open ' . $this->configDir . '/keys.php'
+            );
+        }
+
+        $keyring = include $this->configDir . '/keys.php';
+        if (!isset($keyring['secret-key'], $keyring['public-key'], $keyring['shared-key'])) {
+            throw new CryptoException('Mandatory keys are not defined in keyring');
+        }
+        foreach ($keyring as $key) {
+            if (!($key instanceof CryptographicKeyInterface)) {
+                throw new \TypeError();
+            }
+        }
+
+        if (!($keyring['secret-key'] instanceof AsymmetricSecretKey)) {
+            throw new \TypeError();
+        }
+        if (!($keyring['public-key'] instanceof AsymmetricPublicKey)) {
+            throw new \TypeError();
+        }
+        if (!($keyring['shared-key'] instanceof SymmetricKey)) {
+            throw new \TypeError();
+        }
+        $this->keyring = $keyring;
+        return $this->keyring;
+    }
+
     /**
      * @return CommonMarkConverter
      */
@@ -171,6 +220,67 @@ final class GlobalConfig
     }
 
     /**
+     * @return AsymmetricPublicKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getPublicKey(): AsymmetricPublicKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var AsymmetricPublicKey $publicKey */
+        $publicKey = $keyring['public-key'];
+        if (!($keyring['public-key'] instanceof AsymmetricPublicKey)) {
+            throw new \TypeError();
+        }
+        return $publicKey;
+    }
+
+    /**
+     * @return AsymmetricSecretKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getSecretKey(): AsymmetricSecretKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var AsymmetricSecretKey $secretKey */
+        $secretKey = $keyring['secret-key'];
+        if (!($keyring['secret-key'] instanceof AsymmetricSecretKey)) {
+            throw new \TypeError();
+        }
+        return $secretKey;
+    }
+
+    /**
+     * @return array<string, int|bool|string>
+     */
+    public function getSessionConfig(): array
+    {
+        if (!isset($this->settings['session'])) {
+            return [
+                'cookie_httponly' => true
+            ];
+        }
+        return $this->settings['session'];
+    }
+
+    /**
+     * @return SymmetricKey
+     * @throws CryptoException
+     * @throws FileNotFoundException
+     */
+    public function getSymmetricKey(): SymmetricKey
+    {
+        $keyring = $this->getKeyring();
+        /** @var SymmetricKey $sharedKey */
+        $sharedKey = $keyring['shared-key'];
+        if (!($keyring['shared-key'] instanceof SymmetricKey)) {
+            throw new \TypeError();
+        }
+        return $sharedKey;
+    }
+
+    /**
      * @param string $subdir
      * @return \Twig_Environment
      */
@@ -201,6 +311,9 @@ final class GlobalConfig
         foreach ($custom['globals'] as $name => $value) {
             $twig_env->addGlobal($name, $value);
         }
+        $twig_env->addGlobal('get', $_GET);
+        $twig_env->addGlobal('post', $_POST);
+        $twig_env->addGlobal('session', $_SESSION);
 
         return $twig_env;
     }

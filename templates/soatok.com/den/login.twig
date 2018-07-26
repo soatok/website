@@ -1,0 +1,59 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h2>Dreamseeker Den - Login</h2>
+    {% if error %}
+        <p class="alert-error">{{ error|raw }}</p>
+    {% endif %}
+    <form method="post">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input
+                class="form-control"
+                id="username"
+                name="username"
+                required="required"
+                type="text"
+            />
+        </div>
+        <div class="form-group">
+            <label for="passphrase">Passphrase:</label>
+            <input
+                aria-describedby="passphraseHelp"
+                autocomplete="false"
+                class="form-control"
+                id="passphrase"
+                name="passphrase"
+                required="required"
+                type="password"
+            />
+        </div>
+        <div class="form-group">
+            <label for="authcode">Authenticator Code:</label>
+            <input
+                class="form-control"
+                id="authcode"
+                maxlength="6"
+                name="authcode"
+                pattern="^[0-9]{6}$"
+                placeholder="000000"
+                required="required"
+                size="6"
+                type="text"
+            />
+        </div>
+        <div class="form-group">
+            <input
+                id="remember-me"
+                name="remember"
+                type="checkbox"
+                value="1"
+            />
+            <label for="remember-me">Remember me on this computer?</label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-dark">Log In</button>
+
+        </div>
+    </form>
+{% endblock %}

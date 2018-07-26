@@ -1,0 +1,36 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h2>Dreamseeker's Den Projects</h2>
+
+    <ul>
+        <li>
+            <strong>P.A.W.S.</strong>
+            <ul>
+                <li>Public Adventure Writing System</li>
+                <li>Collaborative "Choose-Your-Own-Adventure" system.</li>
+                <li>Features:
+                    <ul>
+                        <li>Command Suggestions</li>
+                        <li>Optional: Content Suggestions</li>
+                        <li>Link to multiple story paths from any given page</li>
+                        <li>Full Markdown support (including images)</li>
+                        <li>Output is run through HTMLPurifier to evade XSS trickery</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <strong>Vectorized Fursona Sprite Framework</strong>
+            <ul>
+                <li>
+                    In a nutshell: A standard (and user-friendly tooling) for
+                    creating SVG "sprites" for web-based video games. Also, for
+                    creating weapon designs and special effects.
+                </li>
+                <li>Fursona builder</li>
+                <li>Javascript class for parsing/animating sprites</li>
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
