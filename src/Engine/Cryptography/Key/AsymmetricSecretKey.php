@@ -50,7 +50,7 @@ final class AsymmetricSecretKey implements CryptographicKeyInterface
         if (!$pk) {
             $rawSecret = $sk->getString();
             $pk_hs = new HiddenString(
-                \sodium_crypto_box_publickey_from_secretkey($rawSecret)
+                \sodium_crypto_sign_publickey_from_secretkey($rawSecret)
             );
             \sodium_memzero($rawSecret);
             $pk = new AsymmetricPublicKey($pk_hs);

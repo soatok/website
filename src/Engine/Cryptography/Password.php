@@ -76,8 +76,8 @@ final class Password
     ): bool {
         $hash = Symmetric::decryptWithAd($encryptedHash, $this->key, $ad);
         return \sodium_crypto_pwhash_str_verify(
-            $password->getString(),
-            $hash->getString()
+            $hash->getString(),
+            $password->getString()
         );
     }
 }

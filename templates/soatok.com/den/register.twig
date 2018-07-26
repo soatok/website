@@ -8,16 +8,26 @@
     <form method="post">
         <div class="form-group">
             <label for="username">Username</label>
-            <input class="form-control" type="text" name="username" value="{{ post.username|e('html_attr') }}" placeholder="username" />
+            <input
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="username"
+                required="required"
+                type="text"
+                value="{{ post.username|e('html_attr') }}"
+            />
         </div>
         <div class="form-group">
             <label for="email">Email address</label>
             <input
-                type="email"
+                aria-describedby="emailHelp"
                 class="form-control"
                 id="email"
-                aria-describedby="emailHelp"
                 placeholder="user@email.com"
+                required="required"
+                type="email"
+                value="{{ post.email|e('html_attr') }}"
             >
             <small id="emailHelp" class="form-text text-muted">
                 This is only used for password recovery.
@@ -26,14 +36,15 @@
         <div class="form-group">
             <label for="passphrase">Passphrase:</label>
             <input
-                class="form-control"
-                type="text"
-                name="passphrase"
-                autocomplete="false"
-                placeholder="At least 12 characters"
                 aria-describedby="passphraseHelp"
-                required="required"
+                autocomplete="false"
+                class="form-control"
+                id="passphrase"
+                name="passphrase"
                 pattern="^.{12,}$"
+                placeholder="At least 12 characters"
+                required="required"
+                type="text"
             />
             <small id="passphraseHelp" class="form-text text-muted">
                 Must be at least 12 characters long. Password managers are highly recommended.

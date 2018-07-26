@@ -5,9 +5,7 @@ namespace Soatok\Website\Struct;
 use ParagonIE\Stern\SternTrait;
 use Soatok\Website\Engine\Cryptography\Password;
 use Soatok\Website\Engine\Exceptions\{
-    BaseException,
-    RaceConditionException,
-    SecurityException
+    BaseException, NoSuchUserException, RaceConditionException, SecurityException
 };
 use Soatok\Website\Engine\{
     GlobalConfig,
@@ -77,7 +75,7 @@ class User extends Struct implements Unique
     public static function usernameIsTaken(string $username): bool
     {
         return GlobalConfig::instance()->getDatabase()->exists(
-            "SELECT count(*) FROM " . self::TABLE_NAME . " WHERE username = ?",
+            "SELECT count(*) FROM " . static::TABLE_NAME . " WHERE username = ?",
             $username
         );
     }
@@ -165,5 +163,24 @@ class User extends Struct implements Unique
             throw new \TypeError();
         }
         return $user;
+    }
+
+
+    /**
+     * @param string $username
+     *
+     * @return User
+     * @throws BaseException
+     */
+    public static function byUsername(string $username): self
+    {
+        $userId = GlobalConfig::instance()->getDatabase()->cell(
+            "SELECT " . static::PRIMARY_KEY . " FROM " . static::TABLE_NAME . " WHERE username = ?",
+            $username
+        );
+        if (!$userId) {
+            throw new NoSuchUserException('Invalid username and/or passphrase');
+        }
+        return self::byId($userId);
     }
 }

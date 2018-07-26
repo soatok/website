@@ -235,9 +235,9 @@ abstract class Struct
         $db = GlobalConfig::instance()->getDatabase();
         $stored = $db->row(
             "SELECT * FROM " .
-                self::TABLE_NAME .
+                static::TABLE_NAME .
             " WHERE " .
-                self::PRIMARY_KEY . " = ?",
+                static::PRIMARY_KEY . " = ?",
             $id
         );
 

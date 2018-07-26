@@ -4,6 +4,7 @@ namespace Soatok\Website\Engine;
 
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
+use Soatok\Website\Engine\Contract\CryptographicKeyInterface;
 use Soatok\Website\Engine\Cryptography\Key\{
     AsymmetricPublicKey,
     AsymmetricSecretKey,
@@ -310,6 +311,9 @@ final class GlobalConfig
         foreach ($custom['globals'] as $name => $value) {
             $twig_env->addGlobal($name, $value);
         }
+        $twig_env->addGlobal('get', $_GET);
+        $twig_env->addGlobal('post', $_POST);
+        $twig_env->addGlobal('session', $_SESSION);
 
         return $twig_env;
     }

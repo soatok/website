@@ -22,7 +22,11 @@
         </li>
         {% endif %}
         <li>
-            <span class="nav-drop"><a href="/den">Dreamseeker's Den</a></span>
+            {% if session.userid %}
+                <a href="/den">Dreamseeker's Den</a>
+            {% else %}
+                <span class="nav-drop">Dreamseeker's Den</span>
+            {% endif %}
             <ul class="nav-submenu">
             {% if session.userid %}
                 {% include "layout_den_nav.twig" %}

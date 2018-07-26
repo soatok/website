@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
+use GuzzleHttp\Psr7\Response;
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
 use ParagonIE\Ionizer\InvalidDataException;
@@ -9,24 +10,25 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
+use Soatok\Website\Engine\Exceptions\NoSuchUserException;
 use Soatok\Website\Engine\Exceptions\SecurityException;
 use Soatok\Website\Engine\GlobalConfig;
 use Soatok\Website\Engine\Utility;
-use Soatok\Website\FilterRules\Den\RegisterFilter;
+use Soatok\Website\FilterRules\Den\LoginFilter;
 use Soatok\Website\Struct\User;
 
 /**
- * Class Register
+ * Class Login
  * @package Soatok\Website\RequestHandler\Den
  */
-class Register implements RequestHandlerInterface
+class Login implements RequestHandlerInterface
 {
     /**
      * @return InputFilterContainer
      */
     public function getInputFilterContainer(): InputFilterContainer
     {
-        return new RegisterFilter();
+        return new LoginFilter();
     }
 
     /**
@@ -47,31 +49,29 @@ class Register implements RequestHandlerInterface
     }
 
     /**
-     * @param array $post
+     * @param array $params
+     * @return Response
      *
      * @throws BaseException
      * @throws SecurityException
      * @throws \SodiumException
-     * @return User
      */
-    protected function createAccount(array $post): User
+    protected function login(array $params): Response
     {
-        $db = GlobalConfig::instance()->getDatabase();
-        if (User::usernameIsTaken($post['username'])) {
-            throw new SecurityException(
-                'User "' . $post['username'] . '" is already registered.'
-            );
+        if (!isset($params['username'], $params['passphrase'])) {
+            throw new SecurityException('Form not completed.');
         }
-        $user = new User($db);
-        $user->set('username', $post['username'])
-             ->set('email', $post['email']);
-        if (!$user->create()) {
-            throw new SecurityException('Could not create new user account.');
+        $username = $params['username'];
+        $passphrase = new HiddenString($params['passphrase']);
+
+        $user = User::byUsername($username);
+        if ($user->checkPassword($passphrase)) {
+            $_SESSION['userid'] = $user->getId();
+        } else {
+            throw new NoSuchUserException('Invalid username and/or passphrase');
         }
-        $user->setPassword(new HiddenString($post['passphrase']));
-        $user->update();
-        $_SESSION['userid'] = $user->getId();
-        return $user;
+
+        return Utility::redirect('/den');
     }
 
     /**
@@ -91,13 +91,14 @@ class Register implements RequestHandlerInterface
         $twigVars = [];
         if ($post) {
             try {
-                $this->createAccount($post);
-                return Utility::redirect('/den');
+                return $this->login($post);
             } catch (\Throwable $ex) {
                 if (GlobalConfig::instance()->isDebug()) {
                     $twigVars['error'] = \get_class($ex) . ': ' .
                          $ex->getMessage() . PHP_EOL .
-                         $ex->getTraceAsString() . PHP_EOL;
+                         $ex->getFile() . PHP_EOL .
+                         'Line ' . $ex->getLine() . PHP_EOL .
+                         '<pre>'. $ex->getTraceAsString() . '</pre>';
                 } else {
                     $twigVars['error'] = $ex->getMessage();
                 }
@@ -106,7 +107,7 @@ class Register implements RequestHandlerInterface
 
         return GlobalConfig::instance()
             ->getTemplates()
-            ->render('den/register.twig', $twigVars);
+            ->render('den/login.twig', $twigVars);
 
     }
 }

@@ -156,3 +156,6 @@ nav a:hover {
 #article-list .entry-title {
     font-size: 15pt;
 }
+#content pre {
+    color: #ccc !important;
+}
