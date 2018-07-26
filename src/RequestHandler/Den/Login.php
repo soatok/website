@@ -16,6 +16,7 @@ use Soatok\Website\Engine\Exceptions\SecurityException;
 use Soatok\Website\Engine\GlobalConfig;
 use Soatok\Website\Engine\Utility;
 use Soatok\Website\FilterRules\Den\LoginFilter;
+use Soatok\Website\Middleware\AutoLoginMiddleware;
 use Soatok\Website\Struct\User;
 
 /**
@@ -37,7 +38,9 @@ class Login implements RequestHandlerInterface
      */
     public function getMiddleware(): array
     {
-        return [];
+        return [
+            new AutoLoginMiddleware()
+        ];
     }
 
     /**
@@ -66,14 +69,15 @@ class Login implements RequestHandlerInterface
         $passphrase = new HiddenString($params['passphrase']);
 
         $user = User::byUsername($username);
-        if ($user->checkPassword($passphrase)) {
-            \session_regenerate_id(true);
-            $_SESSION['userid'] = $user->getId();
-            $_SESSION['logout-nonce'] = Base64UrlSafe::encode(
-                \random_bytes(33)
-            );
-        } else {
+        if (!$user->checkPassword($passphrase)) {
             throw new NoSuchUserException('Invalid username and/or passphrase');
+        }
+        \session_regenerate_id(true);
+        $_SESSION['userid'] = $user->getId();
+        $_SESSION['logout-nonce'] = Base64UrlSafe::encode(\random_bytes(33));
+        if (isset($params['remember'])) {
+            $token = $user->createAuthToken();
+            Utility::setCookie('auth', $token->getString(), time() + 604800);
         }
 
         return Utility::redirect('/den');

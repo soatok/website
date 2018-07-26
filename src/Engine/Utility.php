@@ -186,4 +186,32 @@ abstract class Utility
             GlobalConfig::instance()->getHttpVersion()
         );
     }
+
+    /**
+     * @param string $name
+     * @param string|int|bool|null $value
+     * @param int|null $expires
+     * @return bool
+     *
+     * @throws BaseException
+     */
+    public static function setCookie(
+        string $name,
+        $value = null,
+        ?int $expires = null
+    ): bool {
+        if (\headers_sent()) {
+            return false;
+        }
+        $config = GlobalConfig::instance()->getSessionConfig();
+        return \setcookie(
+            $name,
+            $value,
+            $expires ?? 0,
+            $config['cookie_path'] ?? '/',
+            $config['cookie_domain'] ?? '',
+            $config['cookie_secure'] ?? false,
+            $config['cookie_httponly'] ?? true
+        );
+    }
 }

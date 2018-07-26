@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\FilterRules\Den;
 
+use ParagonIE\Ionizer\Filter\BoolFilter;
 use ParagonIE\Ionizer\Filter\StringFilter;
 use ParagonIE\Ionizer\InputFilterContainer;
 
@@ -15,6 +16,7 @@ class LoginFilter extends InputFilterContainer
     {
         $this
             ->addFilter('username', new StringFilter())
-            ->addFilter('passphrase', new StringFilter());
+            ->addFilter('passphrase', new StringFilter())
+            ->addFilter('remember', new BoolFilter());
     }
 }

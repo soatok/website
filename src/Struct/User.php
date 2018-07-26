@@ -2,15 +2,14 @@
 declare(strict_types=1);
 namespace Soatok\Website\Struct;
 
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Stern\SternTrait;
 use Soatok\Website\Engine\Cryptography\Password;
 use Soatok\Website\Engine\Exceptions\{
     BaseException, NoSuchUserException, RaceConditionException, SecurityException
 };
 use Soatok\Website\Engine\{
-    GlobalConfig,
-    Policies\Unique,
-    Struct
+    Cryptography\Symmetric, GlobalConfig, Policies\Unique, Struct
 };
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE_Sodium_Core_Util as Util;
@@ -64,6 +63,34 @@ class User extends Struct implements Unique
             throw new \TypeError();
         }
         return $user;
+    }
+
+    /**
+     * @return HiddenString
+     * @throws BaseException
+     * @throws \SodiumException
+     */
+    public function createAuthToken(): HiddenString
+    {
+        $this->db->beginTransaction();
+        $selector = Base64UrlSafe::encode(\random_bytes(18));
+        $validator = Base64UrlSafe::encode(\random_bytes(33));
+        $mac = Symmetric::auth(
+            $selector . ':' . $validator,
+            GlobalConfig::instance()->getSymmetricKey()
+        );
+        $this->db->insert(
+            'website_token_remember',
+            [
+                'userid' => $this->id,
+                'selector' => $selector,
+                'validator' => $mac
+            ]
+        );
+        if (!$this->db->commit()) {
+            throw new SecurityException('Could not save long-term token');
+        }
+        return new HiddenString($selector . ':' . $validator);
     }
 
     /**
@@ -148,6 +175,43 @@ class User extends Struct implements Unique
     {
         $this->__set($property, $value);
         return $this;
+    }
+
+    /**
+     * @param HiddenString $token
+     *
+     * @return User
+     * @throws BaseException
+     * @throws \SodiumException
+     */
+    public static function byAuthToken(HiddenString $token): self
+    {
+        $db = GlobalConfig::instance()->getDatabase();
+        list($selector, $validator) = \explode(':', $token->getString());
+        $mac = Symmetric::auth(
+            $selector . ':' . $validator,
+            GlobalConfig::instance()->getSymmetricKey()
+        );
+
+        $db->beginTransaction();
+        $matches = $db->run(
+            "SELECT * FROM website_token_remember WHERE selector = ?",
+            $selector
+        );
+        foreach ($matches as $row) {
+            if (\hash_equals($mac, $row['validator'])) {
+                $db->delete(
+                    'website_token_remember',
+                    [
+                        'tokenid' => $row['tokenid']
+                    ]
+                );
+                $db->commit();
+                return User::byId($row[static::PRIMARY_KEY]);
+            }
+        }
+        $db->rollBack();
+        throw new NoSuchUserException();
     }
 
     /**

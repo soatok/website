@@ -66,6 +66,9 @@ class Logout implements RequestHandlerInterface
             unset($_SESSION['userid']);
             \session_regenerate_id(true);
         }
+        if (isset($_COOKIE['auth'])) {
+            Utility::setCookie('auth', null, \time() - 86400);
+        }
 
         return Utility::redirect('/den/login');
     }

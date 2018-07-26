@@ -35,7 +35,9 @@ class Register implements RequestHandlerInterface
      */
     public function getMiddleware(): array
     {
-        return [];
+        return [
+            new AutoLoginMiddleware()
+        ];
     }
 
     /**

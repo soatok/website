@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\Engine\Cryptography;
 
+use ParagonIE\ConstantTime\Hex;
 use Soatok\Website\Engine\Cryptography\Key\SymmetricKey;
 use Soatok\Website\Engine\Exceptions\CryptoException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -22,10 +23,41 @@ abstract class Symmetric
     const HEADER = "furry100";
 
     /*
+     * Prehash the symmetric key with this constant to get a separate key for
+     * message authentication
+     */
+    const AUTH_DOMAIN_SEPARATION = "S0470K::domain-separation4authKz";
+
+    /*
      * If we need to change protocol versions, we'll greenlight the new version
      * headers in this hard-coded constant:
      */
     const ALLOWED_HEADERS = ["furry100"];
+
+    /**
+     * @param string $message
+     * @param SymmetricKey $key
+     * @param bool $raw
+     *
+     * @return string
+     * @throws \SodiumException
+     */
+    public static function auth(
+        string $message,
+        SymmetricKey $key,
+        bool $raw = false
+    ): string {
+        $subKey = NaCl::crypto_generichash(
+            $key->getRawKeyMaterial(),
+            self::AUTH_DOMAIN_SEPARATION
+        );
+        $mac = NaCl::crypto_auth($message, $subKey);
+        \sodium_memzero($subKey);
+        if ($raw) {
+            return $mac;
+        }
+        return NaCl::bin2hex($mac);
+    }
 
     /**
      * @param HiddenString $message
@@ -79,6 +111,34 @@ abstract class Symmetric
         SymmetricKey $key
     ): HiddenString {
         return self::decryptWithAd($encrypted, $key);
+    }
+
+    /**
+     * @param string $message
+     * @param SymmetricKey $key
+     * @param string $mac
+     * @param bool $macIsRaw
+     *
+     * @return bool
+     * @throws \SodiumException
+     */
+    public static function verify(
+        string $message,
+        SymmetricKey $key,
+        string $mac,
+        bool $macIsRaw = false
+    ): bool {
+        if (!$macIsRaw) {
+            $mac = Hex::decode($mac);
+        }
+
+        $subKey = NaCl::crypto_generichash(
+            $key->getRawKeyMaterial(),
+            self::AUTH_DOMAIN_SEPARATION
+        );
+        $calc = NaCl::crypto_auth($message, $subKey);
+        \sodium_memzero($subKey);
+        return \hash_equals($calc, $mac);
     }
 
     /**

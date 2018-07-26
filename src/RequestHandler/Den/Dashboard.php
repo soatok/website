@@ -11,6 +11,7 @@ use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
+use Soatok\Website\Middleware\AutoLoginMiddleware;
 use Soatok\Website\Middleware\DenMiddleware;
 
 /**
@@ -33,6 +34,7 @@ class Dashboard implements RequestHandlerInterface
     public function getMiddleware(): array
     {
         return [
+            new AutoLoginMiddleware(),
             new DenMiddleware()
         ];
     }
