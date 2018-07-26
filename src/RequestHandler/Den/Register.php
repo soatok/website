@@ -98,7 +98,10 @@ class Register implements RequestHandlerInterface
         $user->setPassword(new HiddenString($post['passphrase']));
         $user->setTwoFactorSecret(new HiddenString($_SESSION['twoFactorTemp']));
         $user->update();
+
+        unset($_SESSION['twoFactorTemp']);
         \session_regenerate_id(true);
+
         $_SESSION['userid'] = $user->getId();
         $_SESSION['logout-nonce'] = Base64UrlSafe::encode(
             \random_bytes(33)
