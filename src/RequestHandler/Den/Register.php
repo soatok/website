@@ -4,6 +4,7 @@ namespace Soatok\Website\RequestHandler\Den;
 
 use DivineOmega\PasswordExposed\PasswordStatus;
 use Kelunik\TwoFactor\Oath;
+use ParagonIE\ConstantTime\Base32;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE\Ionizer\InputFilterContainer;
@@ -151,6 +152,7 @@ class Register implements RequestHandlerInterface
             'soatok.com',
             '$username'
         );
+        $twigVars['twofactorsecret'] = Base32::encode($_SESSION['twoFactorTemp']);
 
         return GlobalConfig::instance()
             ->getTemplates()
