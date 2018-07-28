@@ -67,7 +67,7 @@ class User extends Struct implements Unique
      */
     public static function active(): self
     {
-        if (isset($_SESSION['userid'])) {
+        if (!isset($_SESSION['userid'])) {
             throw new SecurityException('Not logged in');
         }
         $user = User::strictById((int) $_SESSION['userid']);

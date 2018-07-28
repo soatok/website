@@ -1,0 +1,95 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h2>My Account ({{ username|e('html') }})</h2>
+    {% if error %}
+        <p class="alert-error">{{ error|e('html') }}</p>
+    {% endif %}
+    <form method="post">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input
+                    aria-describedby="emailHelp"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="user@email.com"
+                    required="required"
+                    type="email"
+                    value="{{ email|e('html_attr') }}"
+            >
+            <small id="emailHelp" class="form-text text-muted">
+                This is only used for password recovery.
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="passphrase">Change Passphrase:</label>
+            <input
+                aria-describedby="passphraseHelp"
+                autocomplete="new-password"
+                class="form-control"
+                id="passphrase"
+                name="passphrase"
+                pattern="^.{12,}$"
+                placeholder="Leave blank unless you intend to change your passphrase"
+                type="password"
+            />
+            <small id="passphraseHelp" class="form-text text-muted">
+                Must be at least 12 characters long. Password managers are highly recommended.
+            </small>
+        </div>
+
+        <div class="form-group">
+            <input
+                name="2fa-toggle"
+                id="2fa-toggle"
+                type="checkbox"
+                value="1"
+            />
+            <label for="2fa-toggle">Reset Two-Factor Authentication Secret?</label>
+        </div>
+
+        <div class="form-group" id="2fa-container">
+            <p>
+                Please scan this QR code with your TOTP-enabled multi-factor
+                authentication device. If you do not have one, check out
+                <a
+                        href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US"
+                        rel="noopener"
+                >Google Authenticator</a>.
+            </p>
+            <input
+                    type="hidden"
+                    data-base="{{ twofactoruri }}"
+                    value="{{ twofactoruri|e('html_attr') }}"
+                    id="2fa-uri"
+            />
+            <div class="text-center">
+                <canvas id="qr-code">{{ twofactoruri }}</canvas>
+                <p><code id="qr-code-txt"></code></p>
+                <p>Secret: <code>{{ twofactorsecret }}</code></p>
+            </div>
+
+            <label for="authcode">Authenticator Code:</label>
+            <input
+                class="form-control"
+                id="authcode"
+                maxlength="6"
+                name="authcode"
+                pattern="^[0-9]{6}$"
+                placeholder="000000"
+                size="6"
+                type="text"
+            />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-dark">Update Account Settings</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha256-25ncr0CpJhgbzkUiR3wu/Fkk9sSykRG2qX+upHfJUos=" crossorigin="anonymous"></script>
+    <script src="/static/den/my-account.js"></script>
+{% endblock %}

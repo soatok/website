@@ -11,6 +11,7 @@ use Soatok\Website\RequestHandler\Den\{
     Dashboard,
     Login,
     Logout,
+    MyAccount,
     RecoverAccount,
     Register
 };
@@ -23,6 +24,7 @@ return function(RouteCollector $r) {
     $r->addRoute('GET', '/den/logout/{nonce:[A-Za-z0-9\_\-]+?}', Logout::class);
     $r->addRoute('GET', '/den/account-recovery/{token}', RecoverAccount::class);
     $r->addRoute(['GET', 'POST'], '/den/account-recovery', RecoverAccount::class);
+    $r->addRoute(['GET', 'POST'], '/den/my-account', MyAccount::class);
     $r->addRoute('GET', '/den', Dashboard::class);
 
     $r->addRoute('GET', '/{name:[a-zA-Z0-9\-_\/]+?}', StaticPage::class);
