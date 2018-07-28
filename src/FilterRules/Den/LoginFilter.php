@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Soatok\Website\FilterRules\Den;
 
-use ParagonIE\Ionizer\Filter\BoolFilter;
-use ParagonIE\Ionizer\Filter\StringFilter;
+use ParagonIE\Ionizer\Filter\{
+    BoolFilter,
+    StringFilter
+};
 use ParagonIE\Ionizer\InputFilterContainer;
 
 /**

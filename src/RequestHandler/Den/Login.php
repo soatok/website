@@ -5,16 +5,24 @@ namespace Soatok\Website\RequestHandler\Den;
 use GuzzleHttp\Psr7\Response;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
-use ParagonIE\Ionizer\InputFilterContainer;
-use ParagonIE\Ionizer\InvalidDataException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use ParagonIE\Ionizer\{
+    InputFilterContainer,
+    InvalidDataException
+};
+use Psr\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
-use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\Exceptions\NoSuchUserException;
-use Soatok\Website\Engine\Exceptions\SecurityException;
-use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\Engine\Utility;
+use Soatok\Website\Engine\Exceptions\{
+    BaseException,
+    NoSuchUserException,
+    SecurityException
+};
+use Soatok\Website\Engine\{
+    GlobalConfig,
+    Utility
+};
 use Soatok\Website\FilterRules\Den\LoginFilter;
 use Soatok\Website\Middleware\AutoLoginMiddleware;
 use Soatok\Website\Struct\User;

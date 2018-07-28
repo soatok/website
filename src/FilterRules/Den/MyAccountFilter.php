@@ -2,9 +2,11 @@
 declare(strict_types=1);
 namespace Soatok\Website\FilterRules\Den;
 
-use ParagonIE\Ionizer\Filter\BoolFilter;
-use ParagonIE\Ionizer\Filter\Special\EmailAddressFilter;
-use ParagonIE\Ionizer\Filter\StringFilter;
+use ParagonIE\Ionizer\Filter\{
+    BoolFilter,
+    Special\EmailAddressFilter,
+    StringFilter
+};
 use ParagonIE\Ionizer\InputFilterContainer;
 
 /**

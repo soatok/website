@@ -4,10 +4,12 @@ namespace Soatok\Website\Middleware;
 
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\RequestInterface;
-use Soatok\Website\Engine\Contract\MiddlewareInterface;
-use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\Engine\Utility;
+use Soatok\Website\Engine\{
+    Contract\MiddlewareInterface,
+    Exceptions\BaseException,
+    GlobalConfig,
+    Utility
+};
 use Soatok\Website\Struct\User;
 
 /**

@@ -4,8 +4,10 @@ namespace Soatok\Website\RequestHandler\Den;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Ionizer\InputFilterContainer;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\Utility;

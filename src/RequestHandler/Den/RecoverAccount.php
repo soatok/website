@@ -23,10 +23,7 @@ use Soatok\Website\Engine\{
 };
 use Soatok\Website\FilterRules\Den\AccountRecoveryFilter;
 use Soatok\Website\Struct\User;
-use Zend\Mail\{
-    Message,
-    Transport\Sendmail
-};
+use Zend\Mail\Message;
 
 /**
  * Class RecoverAccount
@@ -124,17 +121,17 @@ class RecoverAccount implements RequestHandlerInterface
                 "https://soatok.com/den/account-recovery/" . $token->getString() . "\n"
             );
 
-        $transport = new Sendmail();
-
         $fingerprint = $user->getGPGFingerprint();
         if ($fingerprint) {
             // Encrypt the email before sending it:
             GlobalConfig::instance()
-                ->getGpgMailer($transport)
+                ->getGpgMailer()
                 ->send($message, $fingerprint);
         } else {
             // Send plaintext because the user didn't give their public key:
-            $transport->send($message);
+            GlobalConfig::instance()
+                ->getMailTransport()
+                ->send($message);
         }
         return $success;
     }

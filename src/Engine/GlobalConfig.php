@@ -22,7 +22,12 @@ use ParagonIE\EasyDB\{
     EasyDB,
     Factory
 };
-use Zend\Mail\Transport\TransportInterface;
+use Zend\Mail\Transport\{
+    Sendmail,
+    Smtp,
+    SmtpOptions,
+    TransportInterface
+};
 
 /**
  * Class GlobalConfig
@@ -113,13 +118,16 @@ final class GlobalConfig
     }
 
     /**
-     * @param TransportInterface $transport
+     * @param TransportInterface|null $transport
      *
      * @return GPGMailer
      * @throws \PEAR_Exception
      */
-    public function getGpgMailer(TransportInterface $transport): GPGMailer
+    public function getGpgMailer(?TransportInterface $transport = null): GPGMailer
     {
+        if (\is_null($transport)) {
+            $transport = $this->getMailTransport();
+        }
         if (\is_readable($this->configDir . '/private.key')) {
             return new GPGMailer(
                 $transport,
@@ -199,6 +207,27 @@ final class GlobalConfig
         }
         $this->keyring = $keyring;
         return $this->keyring;
+    }
+
+    /**
+     * @return TransportInterface
+     */
+    public function getMailTransport(): TransportInterface
+    {
+        if (empty($this->settings['mail-transport']['type'])) {
+            return new Sendmail();
+        }
+        switch ($this->settings['mail-transport']['type']) {
+            case 'sendmail':
+                return new Sendmail();
+            case 'smtp':
+                $options = new SmtpOptions(
+                    $this->settings['mail-transport']['options']
+                );
+                return new Smtp($options);
+            default:
+                throw new \TypeError('Invalid mail transport type');
+        }
     }
 
     /**

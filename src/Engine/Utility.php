@@ -3,11 +3,16 @@ declare(strict_types=1);
 namespace Soatok\Website\Engine;
 
 use GuzzleHttp\Psr7\Response;
-use ParagonIE\Ionizer\InputFilterContainer;
-use ParagonIE\Ionizer\InvalidDataException;
+use ParagonIE\Ionizer\{
+    InputFilterContainer,
+    InvalidDataException
+};
 use Psr\Http\Message\RequestInterface;
 use Soatok\Website\Engine\Exceptions\{
-    BaseException, FileNotFoundException, FileReadException, JSONException
+    BaseException,
+    FileNotFoundException,
+    FileReadException,
+    JSONException
 };
 
 /**

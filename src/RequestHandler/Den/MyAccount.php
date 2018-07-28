@@ -5,19 +5,29 @@ namespace Soatok\Website\RequestHandler\Den;
 use Kelunik\TwoFactor\Oath;
 use ParagonIE\ConstantTime\Base32;
 use ParagonIE\HiddenString\HiddenString;
-use ParagonIE\Ionizer\InputFilterContainer;
-use ParagonIE\Ionizer\InvalidDataException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use ParagonIE\Ionizer\{
+    InputFilterContainer,
+    InvalidDataException
+};
+use Psr\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
-use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\Exceptions\RaceConditionException;
-use Soatok\Website\Engine\Exceptions\SecurityException;
-use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\Engine\Utility;
+use Soatok\Website\Engine\Exceptions\{
+    BaseException,
+    RaceConditionException,
+    SecurityException
+};
+use Soatok\Website\Engine\{
+    GlobalConfig,
+    Utility
+};
 use Soatok\Website\FilterRules\Den\MyAccountFilter;
-use Soatok\Website\Middleware\AutoLoginMiddleware;
-use Soatok\Website\Middleware\DenMiddleware;
+use Soatok\Website\Middleware\{
+    AutoLoginMiddleware,
+    DenMiddleware
+};
 use Soatok\Website\Struct\User;
 
 /**

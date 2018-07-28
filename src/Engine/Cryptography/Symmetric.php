@@ -2,13 +2,15 @@
 declare(strict_types=1);
 namespace Soatok\Website\Engine\Cryptography;
 
-use ParagonIE\ConstantTime\Hex;
-use Soatok\Website\Engine\Cryptography\Key\SymmetricKey;
-use Soatok\Website\Engine\Exceptions\CryptoException;
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\ConstantTime\Binary;
+use ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary,
+    Hex
+};
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE_Sodium_Compat as NaCl;
+use Soatok\Website\Engine\Cryptography\Key\SymmetricKey;
+use Soatok\Website\Engine\Exceptions\CryptoException;
 
 /**
  * Class Symmetric

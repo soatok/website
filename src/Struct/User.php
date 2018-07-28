@@ -5,7 +5,6 @@ namespace Soatok\Website\Struct;
 use Kelunik\TwoFactor\Oath;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Stern\SternTrait;
-use Soatok\Website\Engine\Cryptography\Password;
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
     NoSuchUserException,
@@ -13,7 +12,11 @@ use Soatok\Website\Engine\Exceptions\{
     SecurityException
 };
 use Soatok\Website\Engine\{
-    Cryptography\Symmetric, GlobalConfig, Policies\Unique, Struct
+    Cryptography\Password,
+    Cryptography\Symmetric,
+    GlobalConfig,
+    Policies\Unique,
+    Struct
 };
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE_Sodium_Core_Util as Util;
@@ -371,7 +374,6 @@ class User extends Struct implements Unique
         }
         return $user;
     }
-
 
     /**
      * @param string $username

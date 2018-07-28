@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\FilterRules\Den;
 
+use ParagonIE\Ionizer\Filter\StringFilter;
 use ParagonIE\Ionizer\InputFilterContainer;
 
 /**
@@ -15,6 +16,6 @@ class AccountRecoveryFilter extends InputFilterContainer
      */
     public function __construct()
     {
-
+        $this->addFilter('username', new StringFilter());
     }
 }

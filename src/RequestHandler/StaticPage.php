@@ -2,15 +2,15 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler;
 
-use Soatok\Website\Engine\Contract\RequestHandlerInterface;
-use Soatok\Website\Engine\Exceptions\BaseException;
-use Soatok\Website\Engine\GlobalConfig;
-use Soatok\Website\FilterRules\VoidFilter;
 use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
+use Soatok\Website\Engine\Contract\RequestHandlerInterface;
+use Soatok\Website\Engine\Exceptions\BaseException;
+use Soatok\Website\Engine\GlobalConfig;
+use Soatok\Website\FilterRules\VoidFilter;
 
 /**
  * Class StaticPage
