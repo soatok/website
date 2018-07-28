@@ -35,7 +35,8 @@ class User extends Struct implements Unique
         'pwhash' => 'pwHash',
         'email' => 'email',
         'displayname' => 'displayName',
-        'twofactor' => 'twoFactorSecret'
+        'twofactor' => 'twoFactorSecret',
+        'gpgfingerprint' => 'gpgFingerprint'
     ];
 
     /** @var bool $active */
@@ -55,6 +56,9 @@ class User extends Struct implements Unique
 
     /** @var string $twoFactorSecret */
     protected $twoFactorSecret = '';
+
+    /** @var string $gpgFingerprint */
+    protected $gpgFingerprint = '';
 
     /**
      * @return User
@@ -89,6 +93,34 @@ class User extends Struct implements Unique
         );
         $this->db->insert(
             'website_token_remember',
+            [
+                'userid' => $this->id,
+                'selector' => $selector,
+                'validator' => $mac
+            ]
+        );
+        if (!$this->db->commit()) {
+            throw new SecurityException('Could not save long-term token');
+        }
+        return new HiddenString($selector . ':' . $validator);
+    }
+
+    /**
+     * @return HiddenString
+     * @throws BaseException
+     * @throws \SodiumException
+     */
+    public function createRecoveryToken(): HiddenString
+    {
+        $this->db->beginTransaction();
+        $selector = Base64UrlSafe::encode(\random_bytes(18));
+        $validator = Base64UrlSafe::encode(\random_bytes(33));
+        $mac = Symmetric::auth(
+            $selector . ':' . $validator,
+            GlobalConfig::instance()->getSymmetricKey()
+        );
+        $this->db->insert(
+            'website_token_recovery',
             [
                 'userid' => $this->id,
                 'selector' => $selector,
@@ -159,6 +191,22 @@ class User extends Struct implements Unique
             )->getString(),
             $authCode
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGPGFingerprint(): string
+    {
+        return (string) $this->gpgFingerprint;
     }
 
     /**
@@ -239,6 +287,7 @@ class User extends Struct implements Unique
      * @return User
      * @throws BaseException
      * @throws \SodiumException
+     * @throws NoSuchUserException
      */
     public static function byAuthToken(HiddenString $token): self
     {
@@ -258,6 +307,44 @@ class User extends Struct implements Unique
             if (\hash_equals($mac, $row['validator'])) {
                 $db->delete(
                     'website_token_remember',
+                    [
+                        'tokenid' => $row['tokenid']
+                    ]
+                );
+                $db->commit();
+                return User::byId($row[static::PRIMARY_KEY]);
+            }
+        }
+        $db->rollBack();
+        throw new NoSuchUserException();
+    }
+
+    /**
+     * @param HiddenString $token
+     *
+     * @return User
+     * @throws BaseException
+     * @throws \SodiumException
+     * @throws NoSuchUserException
+     */
+    public static function byRecoveryToken(HiddenString $token): self
+    {
+        $db = GlobalConfig::instance()->getDatabase();
+        list($selector, $validator) = \explode(':', $token->getString());
+        $mac = Symmetric::auth(
+            $selector . ':' . $validator,
+            GlobalConfig::instance()->getSymmetricKey()
+        );
+
+        $db->beginTransaction();
+        $matches = $db->run(
+            "SELECT * FROM website_token_recovery WHERE selector = ?",
+            $selector
+        );
+        foreach ($matches as $row) {
+            if (\hash_equals($mac, $row['validator'])) {
+                $db->delete(
+                    'website_token_recovery',
                     [
                         'tokenid' => $row['tokenid']
                     ]
@@ -291,6 +378,7 @@ class User extends Struct implements Unique
      *
      * @return User
      * @throws BaseException
+     * @throws NoSuchUserException
      */
     public static function byUsername(string $username): self
     {

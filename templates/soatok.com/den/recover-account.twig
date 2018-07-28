@@ -1,0 +1,34 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h2>Recover Access to your Account</h2>
+    {% if success %}
+        <p class="alert-success">{{ success|e('html') }}</p>
+    {% else %}
+        {% if error %}
+            <p class="alert-error">{{ error|e('html') }}</p>
+        {% endif %}
+        <p>
+            Enter your username below and we'll send a recovery token to your email
+            address.
+        </p>
+        <form method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    placeholder="username"
+                    required="required"
+                    type="text"
+                    value="{{ post.username|e('html_attr') }}"
+                />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-dark">Send Recovery Token</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

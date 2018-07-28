@@ -22,13 +22,15 @@
     "paragonie/constant_time_encoding": "^2",
     "paragonie/csp-builder": "^2",
     "paragonie/easydb": "^2",
+    "paragonie/gpg-mailer": "^0|^1",
     "paragonie/hidden-string": "^1",
     "paragonie/ionizer": "^0|^1",
     "paragonie/random_compat": "^9",
     "paragonie/sodium_compat": "^1.6",
     "paragonie/stern": "dev-master",
     "psr/http-message": "^1",
-    "twig/twig": "^2"
+    "twig/twig": "^2",
+    "zendframework/zend-servicemanager": "~2.5"
   },
   "autoload": {
     "psr-4": {

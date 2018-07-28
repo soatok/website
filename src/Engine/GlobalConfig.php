@@ -4,6 +4,7 @@ namespace Soatok\Website\Engine;
 
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
+use ParagonIE\GPGMailer\GPGMailer;
 use Soatok\Website\Engine\Contract\CryptographicKeyInterface;
 use Soatok\Website\Engine\Cryptography\Key\{
     AsymmetricPublicKey,
@@ -21,6 +22,7 @@ use ParagonIE\EasyDB\{
     EasyDB,
     Factory
 };
+use Zend\Mail\Transport\TransportInterface;
 
 /**
  * Class GlobalConfig
@@ -108,6 +110,27 @@ final class GlobalConfig
     public function getDatabase(): EasyDB
     {
         return $this->db;
+    }
+
+    /**
+     * @param TransportInterface $transport
+     *
+     * @return GPGMailer
+     * @throws \PEAR_Exception
+     */
+    public function getGpgMailer(TransportInterface $transport): GPGMailer
+    {
+        if (\is_readable($this->configDir . '/private.key')) {
+            return new GPGMailer(
+                $transport,
+                $this->settings['gpg-mailer'] ?? [],
+                \file_get_contents($this->configDir . '/private.key')
+            );
+        }
+        return new GPGMailer(
+            $transport,
+            $this->settings['gpg-mailer'] ?? []
+        );
     }
 
     /**
