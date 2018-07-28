@@ -19,6 +19,7 @@ use Soatok\Website\Engine\Exceptions\{
 };
 use Soatok\Website\Engine\{
     GlobalConfig,
+    Traits\RequestHandlerTrait,
     Utility
 };
 use Soatok\Website\FilterRules\Den\AccountRecoveryFilter;
@@ -31,6 +32,8 @@ use Zend\Mail\Message;
  */
 class RecoverAccount implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     const FROM = 'no-reply@soatok.com';
 
     /** @var string $recoveryToken */
@@ -145,7 +148,6 @@ class RecoverAccount implements RequestHandlerInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws InvalidDataException
      * @throws \PEAR_Exception
      * @throws \SodiumException
      */
@@ -154,7 +156,7 @@ class RecoverAccount implements RequestHandlerInterface
         if ($this->recoveryToken) {
             return $this->processToken();
         }
-        $post = Utility::getParams($request);
+        $post = $this->getPostData();
         $twigVars = [];
         if ($post) {
             $twigVars = $this->sendRecoveryToken($post);

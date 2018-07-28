@@ -11,6 +11,7 @@ use Psr\Http\Message\{
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\GlobalConfig;
+use Soatok\Website\Engine\Traits\RequestHandlerTrait;
 use Soatok\Website\FilterRules\VoidFilter;
 use Soatok\Website\Middleware\{
     AutoLoginMiddleware,
@@ -23,6 +24,8 @@ use Soatok\Website\Middleware\{
  */
 class Dashboard implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     /**
      * @return InputFilterContainer
      */

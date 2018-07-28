@@ -21,6 +21,7 @@ use Soatok\Website\Engine\Exceptions\{
 };
 use Soatok\Website\Engine\{
     GlobalConfig,
+    Traits\RequestHandlerTrait,
     Utility
 };
 use Soatok\Website\FilterRules\Den\MyAccountFilter;
@@ -36,6 +37,8 @@ use Soatok\Website\Struct\User;
  */
 class MyAccount implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     /**
      * @return InputFilterContainer
      */
@@ -122,7 +125,7 @@ class MyAccount implements RequestHandlerInterface
     public function __invoke(RequestInterface $request): ResponseInterface
     {
         $user = User::active();
-        $post = Utility::getParams($request);
+        $post = $this->getPostData();
         $twigVars = [
             'email' => $user->email,
             'username' => $user->username

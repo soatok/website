@@ -131,11 +131,11 @@ class Router
 
         try {
             $fc = $handler->getInputFilterContainer();
+            $processed = $fc($post);
+            $handler->setPostData($processed);
             return $request->withBody(
                 stream_for(
-                    \http_build_query(
-                        $fc($post)
-                    )
+                    \http_build_query($processed)
                 )
             );
         } catch (InvalidDataException $ex) {

@@ -21,6 +21,7 @@ use Soatok\Website\Engine\Exceptions\{
 };
 use Soatok\Website\Engine\{
     GlobalConfig,
+    Traits\RequestHandlerTrait,
     Utility
 };
 use Soatok\Website\FilterRules\Den\LoginFilter;
@@ -33,6 +34,8 @@ use Soatok\Website\Struct\User;
  */
 class Login implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     /**
      * @return InputFilterContainer
      */
@@ -112,7 +115,7 @@ class Login implements RequestHandlerInterface
         if (isset($_SESSION['userid'])) {
             return Utility::redirect('/den');
         }
-        $post = Utility::getParams($request);
+        $post = $this->getPostData();
         $twigVars = [];
         if ($post) {
             try {

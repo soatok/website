@@ -24,6 +24,17 @@ interface RequestHandlerInterface
     public function getMiddleware(): array;
 
     /**
+     * @return array<string, mixed>
+     */
+    public function getPostData(): array;
+
+    /**
+     * @param array $post
+     * @return void
+     */
+    public function setPostData(array $post);
+
+    /**
      * @param array $vars
      * @return RequestHandlerInterface
      */

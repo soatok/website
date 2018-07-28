@@ -10,6 +10,7 @@ use Psr\Http\Message\{
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\GlobalConfig;
+use Soatok\Website\Engine\Traits\RequestHandlerTrait;
 use Soatok\Website\FilterRules\VoidFilter;
 
 /**
@@ -18,6 +19,8 @@ use Soatok\Website\FilterRules\VoidFilter;
  */
 class StaticPage implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     /** @var string $page */
     protected $page = '';
 

@@ -10,6 +10,7 @@ use Psr\Http\Message\{
 };
 use Soatok\Website\Engine\Contract\RequestHandlerInterface;
 use Soatok\Website\Engine\Exceptions\BaseException;
+use Soatok\Website\Engine\Traits\RequestHandlerTrait;
 use Soatok\Website\Engine\Utility;
 use Soatok\Website\FilterRules\VoidFilter;
 
@@ -19,6 +20,8 @@ use Soatok\Website\FilterRules\VoidFilter;
  */
 class Logout implements RequestHandlerInterface
 {
+    use RequestHandlerTrait;
+
     private $nonce;
 
     /**
