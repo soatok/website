@@ -159,3 +159,8 @@ nav a:hover {
 #content pre {
     color: #ccc !important;
 }
+.zec {
+    background: #222;
+    font-size: 14pt;
+    padding: 0.33rem 0.33rem 0.33rem 1.33rem;
+}
