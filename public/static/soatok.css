@@ -164,3 +164,6 @@ nav a:hover {
     font-size: 14pt;
     padding: 0.33rem 0.33rem 0.33rem 1.33rem;
 }
+.text-center {
+    text-align: center;
+}

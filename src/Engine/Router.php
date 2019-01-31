@@ -61,7 +61,7 @@ class Router
     {
         try {
             $path = $this->normalizeRequestPath(
-                $request->getRequestTarget()
+                \rtrim($request->getRequestTarget(), '/')
             );
         } catch (RoutingException $ex) {
             $path = '';
