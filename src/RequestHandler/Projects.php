@@ -15,15 +15,15 @@ use Soatok\Website\Engine\Traits\RequestHandlerTrait;
 use Soatok\Website\FilterRules\VoidFilter;
 
 /**
- * Class StaticPage
+ * Class Projects
  * @package Soatok\Website\RequestHandler
  */
-class StaticPage implements RequestHandlerInterface
+class Projects implements RequestHandlerInterface
 {
     use RequestHandlerTrait;
 
-    /** @var string $page */
-    protected $page = '';
+    /** @var string $project */
+    protected $project = '';
 
     /**
      * @return InputFilterContainer
@@ -47,12 +47,12 @@ class StaticPage implements RequestHandlerInterface
      */
     public function setVars(array $vars): RequestHandlerInterface
     {
+        if (empty($vars['name'])) {
+            return $this;
+        }
         $name = $vars['name'];
         if ($this->pageExistsInDirectory($name)) {
-            $this->page = $name;
-        }
-        if ($this->pageExistsInDirectory($name, 'common')) {
-            $this->page = $name;
+            $this->project = $name;
         }
         return $this;
     }
@@ -67,7 +67,7 @@ class StaticPage implements RequestHandlerInterface
         string $name,
         string $tplDir = GlobalConfig::DEFAULT_TWIG_HOSTNAME
     ): bool {
-        $dir = SOATOK_ROOT . '/templates/' . $tplDir . '/pages';
+        $dir = SOATOK_ROOT . '/templates/' . $tplDir . '/projects';
 
         $file = $dir . '/' . $name . '.twig';
         if (\file_exists($file)) {
@@ -91,13 +91,13 @@ class StaticPage implements RequestHandlerInterface
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {
-        if (empty($this->page)) {
+        if (empty($this->project)) {
             return GlobalConfig::instance()
                 ->getTemplates()
-                ->render('error404.twig', [], 404);
+                ->render('projects.twig');
         }
         return GlobalConfig::instance()
             ->getTemplates()
-            ->render('pages/' . $this->page . '.twig');
+            ->render('projects/' . $this->project . '.twig');
     }
 }

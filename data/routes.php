@@ -5,6 +5,7 @@ namespace Soatok\Website;
 use FastRoute\RouteCollector;
 use Soatok\Website\RequestHandler\{
     DefaultPage,
+    Projects,
     StaticPage
 };
 use Soatok\Website\RequestHandler\Den\{
@@ -18,6 +19,8 @@ use Soatok\Website\RequestHandler\Den\{
 
 /* This script must return a callable */
 return function(RouteCollector $r) {
+    $r->addRoute('GET', '/projects/{name:[a-zA-Z0-9\-_\/]+?}', Projects::class);
+    $r->addRoute('GET', '/projects', Projects::class);
     // $r->addRoute('GET', '/blog/{slug:[a-z0-9\-]+?}', BlogPost::class);
     $r->addRoute(['GET', 'POST'], '/den/signup', Register::class);
     $r->addRoute(['GET', 'POST'], '/den/login', Login::class);
