@@ -5,6 +5,7 @@ namespace Soatok\Website\Engine;
 use FastRoute\Dispatcher;
 use GuzzleHttp\Psr7\Response;
 use function GuzzleHttp\Psr7\stream_for;
+use ParagonIE\ConstantTime\Binary;
 use ParagonIE\Ionizer\InvalidDataException;
 use Psr\Http\Message\{
     RequestInterface,
@@ -59,12 +60,16 @@ class Router
      */
     public function getResponse(RequestInterface $request): ResponseInterface
     {
+        $path = \rtrim($request->getRequestTarget(), '/');
+
+        // Strip query string.
+        $pos = \strpos($path, '?');
+        if ($pos !== false) {
+            $path = Binary::safeSubstr($path, 0, $pos);
+        }
         try {
-            $path = $this->normalizeRequestPath(
-                \rtrim($request->getRequestTarget(), '/')
-            );
+            $path = $this->normalizeRequestPath($path);
         } catch (RoutingException $ex) {
-            $path = '';
             // Suppress
         }
         if ($this->isStaticResource($path)) {
@@ -73,7 +78,7 @@ class Router
 
         $routeInfo = $this->dispatcher->dispatch(
             $request->getMethod(),
-            $request->getRequestTarget()
+            $path
         );
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
