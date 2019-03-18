@@ -60,20 +60,22 @@ class Router
      */
     public function getResponse(RequestInterface $request): ResponseInterface
     {
-        $path = \rtrim($request->getRequestTarget(), '/');
+        $path = $request->getRequestTarget();
 
         // Strip query string.
         $pos = \strpos($path, '?');
         if ($pos !== false) {
             $path = Binary::safeSubstr($path, 0, $pos);
         }
+        $path = \rtrim($path, '/');
         try {
-            $path = $this->normalizeRequestPath($path);
+            $npath = $this->normalizeRequestPath($path);
         } catch (RoutingException $ex) {
+            $npath = '';
             // Suppress
         }
-        if ($this->isStaticResource($path)) {
-            return $this->serveStaticResource($path);
+        if ($this->isStaticResource($npath)) {
+            return $this->serveStaticResource($npath);
         }
 
         $routeInfo = $this->dispatcher->dispatch(
