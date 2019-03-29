@@ -12,11 +12,13 @@ use Soatok\Website\Engine\Exceptions\{
     SecurityException
 };
 use Soatok\Website\Engine\{
+    Cryptography\SymmetricLegacy,
     GlobalConfig,
     Policies\Unique,
     Struct
 };
 use Soatok\DholeCrypto\{
+    Exceptions\CryptoException,
     Password,
     Symmetric
 };
@@ -157,6 +159,7 @@ class User extends Struct implements Unique
      *
      * @return bool
      * @throws BaseException
+     * @throws CryptoException
      * @throws \SodiumException
      */
     public function checkPassword(HiddenString $password): bool
@@ -166,6 +169,17 @@ class User extends Struct implements Unique
                 'You cannot set a password until the user record has been saved ' .
                 'to the database, in order to prevent race conditions against ' .
                 'the sequential primary key.'
+            );
+        }
+        if (SymmetricLegacy::isValidCiphertext($this->pwHash)) {
+            $pwhash = SymmetricLegacy::decryptWithAd(
+                $this->pwHash,
+                (GlobalConfig::instance())->getSymmetricKey(),
+                Util::store64_le($this->id)
+            );
+            return \sodium_crypto_pwhash_str_verify(
+                $pwhash->getString(),
+                $password->getString()
             );
         }
 
@@ -181,12 +195,23 @@ class User extends Struct implements Unique
      *
      * @return bool
      * @throws BaseException
+     * @throws CryptoException
      * @throws \SodiumException
      */
     public function checkSecondFactor(string $authCode): bool
     {
         if (!\is_string($this->twoFactorSecret)) {
             return false;
+        }
+        if (SymmetricLegacy::isValidCiphertext($this->twoFactorSecret)) {
+            return (new Oath())->verifyTotp(
+                SymmetricLegacy::decryptWithAd(
+                    $this->twoFactorSecret,
+                    (GlobalConfig::instance())->getSymmetricKey(),
+                    Util::store64_le($this->id)
+                )->getString(),
+                $authCode
+            );
         }
         return (new Oath())->verifyTotp(
             Symmetric::decryptWithAd(
