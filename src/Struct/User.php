@@ -12,11 +12,13 @@ use Soatok\Website\Engine\Exceptions\{
     SecurityException
 };
 use Soatok\Website\Engine\{
-    Cryptography\Password,
-    Cryptography\Symmetric,
     GlobalConfig,
     Policies\Unique,
     Struct
+};
+use Soatok\DholeCrypto\{
+    Password,
+    Symmetric
 };
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE_Sodium_Core_Util as Util;

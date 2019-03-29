@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": "^7.2",
-    "DivineOmega/password_exposed": "^2",
+    "divineomega/password_exposed": "^2",
     "ezyang/htmlpurifier": "^4",
     "kelunik/two-factor": "^1",
     "league/commonmark": "^0.17|^1",
@@ -28,6 +28,7 @@
     "paragonie/random_compat": "^9",
     "paragonie/sodium_compat": "^1.6",
     "paragonie/stern": "dev-master",
+    "soatok/dhole-cryptography": "^0|^1",
     "psr/http-message": "^1",
     "twig/twig": "^2",
     "zendframework/zend-servicemanager": "~2.5"

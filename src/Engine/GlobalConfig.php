@@ -5,8 +5,9 @@ namespace Soatok\Website\Engine;
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
 use ParagonIE\GPGMailer\GPGMailer;
-use Soatok\Website\Engine\Contract\CryptographicKeyInterface;
-use Soatok\Website\Engine\Cryptography\Key\{
+use ParagonIE\GPGMailer\GPGMailerException;
+use Soatok\DholeCrypto\Contract\CryptographicKeyInterface;
+use Soatok\DholeCrypto\Key\{
     AsymmetricPublicKey,
     AsymmetricSecretKey,
     SymmetricKey
@@ -121,13 +122,14 @@ final class GlobalConfig
      * @param TransportInterface|null $transport
      *
      * @return GPGMailer
-     * @throws \PEAR_Exception
+     * @throws GPGMailerException
      */
     public function getGpgMailer(?TransportInterface $transport = null): GPGMailer
     {
         if (\is_null($transport)) {
             $transport = $this->getMailTransport();
         }
+        /** @var TransportInterface $transport */
         if (\is_readable($this->configDir . '/private.key')) {
             return new GPGMailer(
                 $transport,

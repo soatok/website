@@ -19,7 +19,7 @@ $shared  = sodium_crypto_secretbox_keygen();
 file_put_contents(
     $dir . '/keys.php',
     '<?php' . PHP_EOL .
-    'use Soatok\Website\Engine\Cryptography\Key\{' . PHP_EOL .
+    'use Soatok\DholeCrypto\Key\{' . PHP_EOL .
     '    AsymmetricPublicKey,' . PHP_EOL .
     '    AsymmetricSecretKey,' . PHP_EOL .
     '    SymmetricKey' . PHP_EOL .
