@@ -1,0 +1,61 @@
+{% extends "layout.twig" %}
+
+{% block title %}Canis - Dependency Management for Indie Game Devs{% endblock %}
+{% block content %}
+    <h1>Project Canis</h1>
+    <p><em>Dependency Management for Indie Game Devs</em></p>
+
+    <div class="text-center">
+        <picture>
+            <img class="full-image" src="/static/projects/canis-logo/SoatokLogoV1Transparent.png" alt="Project Canis" />
+            <figcaption>
+                This beautiful piece was created by
+                <a href="https://twitter.com/KirraBunnyIRL">Kirra Bunny</a>.
+            </figcaption>
+        </picture>
+    </div>
+
+    <h2>Project Goals</h2>
+    <ol>
+        <li>
+            To provide an easy-to-use dependency management tool for indie game
+            developers whose platform does not already provide one.
+        </li>
+        <li>
+            To foster greater collaboration between game developers, and build
+            bridges within and between communities.
+        </li>
+        <li>
+            To <a href="https://defuse.ca/triangle-of-secure-code-delivery.htm">securely deliver code</a>.
+        </li>
+        <li>
+            To ensure resource developers have complete control over the
+            cryptographic keys used to sign their package releases.
+        </li>
+    </ol>
+
+    <h2>Components</h2>
+    <h3>Canis Client</h3>
+    <p>
+        The <em>Canis Client</em> will be a desktop program, written in Electron,
+        that allows independent game developers to distribute or consume shared
+        game dev resources (e.g. software libraries) for their specific platform.
+    </p>
+    <p class="text-center">
+        <a class="call-to-action" href="https://github.com/soatok/canis-client">
+            <i class="fa fa-github"></i> Canis Client Source Code
+        </a>
+    </p>
+
+
+    <h3>Canis Server</h3>
+    <p>
+        JSON API that brokers communication between Canis clients.
+    </p>
+    <p class="text-center">
+        <a class="call-to-action" href="https://github.com/soatok/canis-server">
+            <i class="fa fa-github"></i> Canis Server Source Code
+        </a>
+    </p>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.twig" %}
+
+{% block title %}FAQ Off!{% endblock %}
+{% block content %}
+<h1>FAQ Off!</h1>
+<p>
+    If you ever find yourself being dragged into the same exhausting conversations
+    online, especially by a focused mob, you might be interested in <em>FAQ Off</em>.
+</p>
+<p>
+    FAQ Off builds an interactive FAQ with a <a href="https://en.wikipedia.org/wiki/Gamebook">gamebook</a>-style
+    user experience.
+</p>
+<p>
+    To learn more about FAQ Off, or to see what its public interface looks like,
+    <a href="https://faq.dhol.es/@Soatok/public-beta/what-is-faq-off">click here</a>.
+</p>
+
+<h2>Technical Details</h2>
+<ul>
+    <li>Written in PHP (7.3 or newer required)</li>
+    <li>Powered by Slim Framework and <a href="https://github.com/soatok/anthrokit">AnthroKit</a></li>
+    <li>Data is stored in PostgreSQL (9.6 or newer)</li>
+    <li>Separates user accounts from author profiles</li>
+</ul
+>
+<p class="text-center">
+    <a class="call-to-action" href="https://github.com/soatok/faq-off">
+        <i class="fa fa-github"></i> FAQ Off Source Code
+    </a>
+</p>
+{% endblock %}
