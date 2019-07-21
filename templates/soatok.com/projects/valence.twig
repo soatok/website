@@ -1,0 +1,55 @@
+{% extends "layout.twig" %}
+{% block title %}Valence - Secure Self-Updating Electron Apps{% endblock %}
+{% block content %}
+    <h1>Valence</h1>
+    <p>
+        Valence is a framework that wraps <a href="https://electronjs.org/">Electron</a>
+        to provide secure self-updating applications.
+    </p>
+    <h2>Valence Components</h2>
+
+    <h3>Valence Dev Tools</h3>
+    <p>
+        Contains components for signing and releasing Valence app bundles.
+    </p>
+    <p>
+        Install it globally like so:
+    </p>
+    <pre><code class="terminal">npm install -g valence-devtools</code></pre>
+
+    <p class="text-center">
+        <a class="call-to-action" href="https://github.com/soatok/valence-devtools/releases">
+            <i class="fa fa-download"></i> Latest Release
+        </a>
+        <a class="call-to-action" href="https://github.com/soatok/valence-devtools">
+            <i class="fa fa-github"></i> Source Code
+        </a>
+    </p>
+
+    <h3>Valence Skeleton</h3>
+    <p>
+        A basic Electron app that contains a launcher and self-updater.
+    </p>
+
+    <p class="text-center">
+        <a class="call-to-action" href="https://github.com/soatok/valence-skeleton/releases">
+            <i class="fa fa-download"></i> Latest Release
+        </a>
+        <a class="call-to-action" href="https://github.com/soatok/valence-skeleton">
+            <i class="fa fa-github"></i> Source Code
+        </a>
+    </p>
+
+    <h3>Valence Update Server</h3>
+    <p>
+        A basic REST API that Valence apps talk to in order to check for new updates.
+    </p>
+    <p class="text-center">
+        <a class="call-to-action" href="https://github.com/soatok/valence-updateserver/releases">
+            <i class="fa fa-download"></i> Latest Release
+        </a>
+        <a class="call-to-action" href="https://github.com/soatok/valence-updateserver">
+            <i class="fa fa-github"></i> Source Code
+        </a>
+    </p>
+{% endblock %}
