@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\Engine;
 
+use Soatok\DholeCrypto\Exceptions\CryptoException;
 use function FastRoute\cachedDispatcher;
 use League\CommonMark\CommonMarkConverter;
 use ParagonIE\GPGMailer\GPGMailer;
@@ -14,7 +15,6 @@ use Soatok\DholeCrypto\Key\{
 };
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
-    CryptoException,
     FileNotFoundException,
     FileReadException,
     JSONException
@@ -23,7 +23,11 @@ use ParagonIE\EasyDB\{
     EasyDB,
     Factory
 };
-use Zend\Mail\Transport\{
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Laminas\Mail\Transport\{
     Sendmail,
     Smtp,
     SmtpOptions,
@@ -46,6 +50,9 @@ final class GlobalConfig
 
     /** @var EasyDB $db */
     private $db;
+
+    /** @var array<string, CryptographicKeyInterface> $keyring */
+    private $keyring;
 
     /** @var \HTMLPurifier $purifier */
     private $purifier;
@@ -336,23 +343,24 @@ final class GlobalConfig
 
     /**
      * @param string $subdir
-     * @return \Twig_Environment
+     * @return Environment
+     * @psalm-suppress PossiblyUndefinedVariable
      */
     public function getTwig(
         string $subdir = self::DEFAULT_TWIG_HOSTNAME
-    ): \Twig_Environment {
-        $twig_loader = new \Twig_Loader_Filesystem([
+    ): Environment {
+        $twig_loader = new FilesystemLoader([
             SOATOK_ROOT . '/templates/' . $subdir,
             SOATOK_ROOT . '/templates/common'
         ]);
-        $twig_env = new \Twig_Environment($twig_loader);
+        $twig_env = new Environment($twig_loader);
 
         /** @var array<string, array<string, callable>> $filters */
         $custom = require $this->configDir . '/twig.php';
 
         foreach ($custom['functions'] as $name => $callable) {
             $twig_env->addFunction(
-                new \Twig_Function(
+                new TwigFunction(
                     $name,
                     $callable,
                     ['is_safe' => ['html']]
@@ -360,7 +368,7 @@ final class GlobalConfig
             );
         }
         foreach ($custom['filters'] as $name => $callable) {
-            $twig_env->addFilter(new \Twig_Filter($name, $callable));
+            $twig_env->addFilter(new TwigFilter($name, $callable));
         }
         foreach ($custom['globals'] as $name => $value) {
             $twig_env->addGlobal($name, $value);

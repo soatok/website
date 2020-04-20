@@ -2,12 +2,11 @@
 declare(strict_types=1);
 namespace Soatok\Website\RequestHandler\Den;
 
+use Laminas\Mail\Message;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\GPGMailer\GPGMailerException;
 use ParagonIE\HiddenString\HiddenString;
-use ParagonIE\Ionizer\{
-    InputFilterContainer,
-    InvalidDataException
-};
+use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
@@ -18,13 +17,18 @@ use Soatok\Website\Engine\Exceptions\{
     NoSuchUserException
 };
 use Soatok\Website\Engine\{
+    Contract\MiddlewareInterface,
     GlobalConfig,
     Traits\RequestHandlerTrait,
     Utility
 };
 use Soatok\Website\FilterRules\Den\AccountRecoveryFilter;
 use Soatok\Website\Struct\User;
-use Zend\Mail\Message;
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
+};
 
 /**
  * Class RecoverAccount
@@ -93,8 +97,12 @@ class RecoverAccount implements RequestHandlerInterface
      * @param array<string, mixed> $post
      *
      * @return array<string, mixed>
+     *
      * @throws BaseException
+     * @throws \Crypt_GPG_Exception
+     * @throws \Crypt_GPG_FileException
      * @throws \PEAR_Exception
+     * @throws GPGMailerException
      * @throws \SodiumException
      */
     protected function sendRecoveryToken(array $post): array
@@ -145,9 +153,9 @@ class RecoverAccount implements RequestHandlerInterface
      * @return ResponseInterface
      *
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws \PEAR_Exception
      * @throws \SodiumException
      */

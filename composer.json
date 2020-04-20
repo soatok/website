@@ -11,6 +11,8 @@
   ],
   "require": {
     "php": "^7.2",
+    "ext-curl": "*",
+    "ext-json": "*",
     "divineomega/password_exposed": "^2",
     "ezyang/htmlpurifier": "^4",
     "kelunik/two-factor": "^1",
@@ -22,16 +24,19 @@
     "paragonie/constant_time_encoding": "^2",
     "paragonie/csp-builder": "^2",
     "paragonie/easydb": "^2",
-    "paragonie/gpg-mailer": "^0|^1",
+    "paragonie/gpg-mailer": "^0.5|^1",
     "paragonie/hidden-string": "^1",
     "paragonie/ionizer": "^0|^1",
     "paragonie/random_compat": "^9",
-    "paragonie/sodium_compat": "^1.6",
-    "paragonie/stern": "dev-master",
-    "soatok/dhole-cryptography": "^0.2.1|^1",
+    "paragonie/sodium_compat": "^1.13",
+    "paragonie/stern": "^1",
+    "soatok/dhole-cryptography": "^1",
     "psr/http-message": "^1",
-    "twig/twig": "^2",
-    "zendframework/zend-servicemanager": "~2.5"
+    "twig/markdown-extra": "^3",
+    "twig/twig": "^3",
+    "laminas/laminas-db": "^2|^3",
+    "laminas/laminas-servicemanager": "^2",
+    "laminas/laminas-validator": "^2|^3"
   },
   "autoload": {
     "psr-4": {
@@ -47,8 +52,8 @@
     "process-timeout" : 0
   },
   "require-dev": {
-    "phpunit/phpunit": "^7",
-    "vimeo/psalm": "^2"
+    "phpunit/phpunit": "^8",
+    "vimeo/psalm": "^3"
   },
   "scripts": {
     "start": "php -S localhost:8069 public/index.php",

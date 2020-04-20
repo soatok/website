@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <psalm
     autoloader="./autoload-psalm.php"
+    allowStringToStandInForClass="true"
     totallyTyped="false"
 >
     <projectFiles>
@@ -11,10 +12,13 @@
     </projectFiles>
 
     <issueHandlers>
+        <InternalMethod errorLevel="suppress" />
         <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
         <RedundantCondition errorLevel="info" />
         <DocblockTypeContradiction errorLevel="info" />
         <RedundantConditionGivenDocblockType errorLevel="info" />
         <UnresolvableInclude errorLevel="info" />
+        <MissingConstructor errorLevel="info" />
+        <PropertyNotSetInConstructor errorLevel="info" />
     </issueHandlers>
 </psalm>

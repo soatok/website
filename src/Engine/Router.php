@@ -20,6 +20,11 @@ use Soatok\Website\Engine\Exceptions\{
     RoutingException,
     SecurityException
 };
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
+};
 
 /**
  * Class Router
@@ -194,9 +199,10 @@ class Router
      * @return void
      *
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SecurityException
+     * @throws SyntaxError
      */
     public function serve(RequestInterface $request)
     {

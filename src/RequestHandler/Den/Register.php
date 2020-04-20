@@ -9,15 +9,15 @@ use ParagonIE\ConstantTime\{
     Base64UrlSafe
 };
 use ParagonIE\HiddenString\HiddenString;
-use ParagonIE\Ionizer\{
-    InputFilterContainer,
-    InvalidDataException
-};
+use ParagonIE\Ionizer\InputFilterContainer;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-use Soatok\Website\Engine\Contract\RequestHandlerInterface;
+use Soatok\Website\Engine\Contract\{
+    MiddlewareInterface,
+    RequestHandlerInterface
+};
 use Soatok\Website\Engine\Exceptions\{
     BaseException,
     SecurityException
@@ -30,6 +30,11 @@ use Soatok\Website\Engine\{
 use Soatok\Website\FilterRules\Den\RegisterFilter;
 use Soatok\Website\Middleware\AutoLoginMiddleware;
 use Soatok\Website\Struct\User;
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
+};
 
 /**
  * Class Register
@@ -128,11 +133,11 @@ class Register implements RequestHandlerInterface
      *
      * @param RequestInterface $request
      * @return ResponseInterface
-     * @throws InvalidDataException
+     *
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {

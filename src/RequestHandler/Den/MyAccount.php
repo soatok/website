@@ -19,17 +19,21 @@ use Soatok\Website\Engine\Exceptions\{
     RaceConditionException,
     SecurityException
 };
-use Soatok\Website\Engine\{
+use Soatok\Website\Engine\{Contract\MiddlewareInterface,
     GlobalConfig,
     Traits\RequestHandlerTrait,
-    Utility
-};
+    Utility};
 use Soatok\Website\FilterRules\Den\MyAccountFilter;
 use Soatok\Website\Middleware\{
     AutoLoginMiddleware,
     DenMiddleware
 };
 use Soatok\Website\Struct\User;
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
+};
 
 /**
  * Class MyAccount
@@ -116,11 +120,11 @@ class MyAccount implements RequestHandlerInterface
      *
      * @param RequestInterface $request
      * @return ResponseInterface
-     * @throws InvalidDataException
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SecurityException
+     * @throws SyntaxError
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {

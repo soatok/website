@@ -8,7 +8,10 @@ use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-use Soatok\Website\Engine\Contract\RequestHandlerInterface;
+use Soatok\Website\Engine\Contract\{
+    MiddlewareInterface,
+    RequestHandlerInterface
+};
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\GlobalConfig;
 use Soatok\Website\Engine\Traits\RequestHandlerTrait;
@@ -16,6 +19,11 @@ use Soatok\Website\FilterRules\VoidFilter;
 use Soatok\Website\Middleware\{
     AutoLoginMiddleware,
     DenMiddleware
+};
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
 };
 
 /**
@@ -60,9 +68,9 @@ class Dashboard implements RequestHandlerInterface
      * @return ResponseInterface
      *
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function __invoke(RequestInterface $request): ResponseInterface
     {

@@ -122,7 +122,11 @@ abstract class Struct
                 (string)(static::PRIMARY_KEY)
             );
         } catch (\Exception $ex) {
-            throw new BaseException($ex->getMessage(), $ex->getCode(), $ex);
+            throw new BaseException(
+                $ex->getMessage(),
+                (int) $ex->getCode(),
+                $ex
+            );
         }
         if ($this instanceof Unique) {
             self::$objectCache[$this->getCacheKey()] = $this;

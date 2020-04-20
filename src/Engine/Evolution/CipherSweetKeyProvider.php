@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Soatok\Website\Engine\Evolution;
 
-use Soatok\Website\Engine\Cryptography\Key\SymmetricKey;
+use Soatok\DholeCrypto\Key\SymmetricKey;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\GlobalConfig;
 use ParagonIE\CipherSweet\Contract\BackendInterface;

@@ -8,7 +8,10 @@ use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-use Soatok\Website\Engine\Contract\RequestHandlerInterface;
+use Soatok\Website\Engine\Contract\{
+    MiddlewareInterface,
+    RequestHandlerInterface
+};
 use Soatok\Website\Engine\Exceptions\BaseException;
 use Soatok\Website\Engine\Traits\RequestHandlerTrait;
 use Soatok\Website\Engine\Utility;
@@ -22,6 +25,7 @@ class Logout implements RequestHandlerInterface
 {
     use RequestHandlerTrait;
 
+    /** @var string $nonce */
     private $nonce;
 
     /**

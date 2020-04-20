@@ -50,8 +50,8 @@ abstract class Utility
         $decoded = \json_decode($raw, true);
         if (!\is_array($decoded)) {
             throw new JSONException(
-                \json_last_error_msg(),
-                \json_last_error()
+                (string) \json_last_error_msg(),
+                (int) \json_last_error()
             );
         }
         return $decoded;
@@ -213,10 +213,10 @@ abstract class Utility
             $name,
             (string) $value,
             $expires ?? 0,
-            $config['cookie_path'] ?? '/',
-            $config['cookie_domain'] ?? '',
-            $config['cookie_secure'] ?? false,
-            $config['cookie_httponly'] ?? true
+            (string) ($config['cookie_path'] ?? '/'),
+            (string) ($config['cookie_domain'] ?? ''),
+            (bool) ($config['cookie_secure'] ?? false),
+            (bool) ($config['cookie_httponly'] ?? true)
         );
     }
 }

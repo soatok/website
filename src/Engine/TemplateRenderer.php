@@ -4,6 +4,12 @@ namespace Soatok\Website\Engine;
 use Soatok\Website\Engine\Exceptions\BaseException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
+use Twig\Environment;
+use Twig\Error\{
+    LoaderError,
+    RuntimeError,
+    SyntaxError
+};
 
 /**
  * Class TemplateRenderer
@@ -11,15 +17,15 @@ use Psr\Http\Message\ResponseInterface;
  */
 class TemplateRenderer
 {
-    /** @var \Twig_Environment $env */
+    /** @var Environment $env */
     private $env;
 
     /**
      * TemplateRenderer constructor.
      *
-     * @param \Twig_Environment $env
+     * @param Environment $env
      */
-    public function __construct(\Twig_Environment $env)
+    public function __construct(Environment $env)
     {
         $this->env = $env;
     }
@@ -33,9 +39,9 @@ class TemplateRenderer
      * @return ResponseInterface
      *
      * @throws BaseException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function render(
         string $template,
