@@ -16,7 +16,7 @@
     "divineomega/password_exposed": "^2",
     "ezyang/htmlpurifier": "^4",
     "kelunik/two-factor": "^1",
-    "league/commonmark": "^0.17|^1",
+    "league/commonmark": "^1",
     "nikic/fast-route": "^1.3",
     "paragonie/anti-csrf": "^2",
     "paragonie/certainty": "^2",
